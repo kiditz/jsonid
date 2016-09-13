@@ -13,6 +13,7 @@
 
 package org.raden.jsonid.utils;
 
+
 /**
  * This is a near duplicate of {@link TimSort}, modified for use with arrays of
  * objects that implement {@link Comparable}, instead of using explicit
@@ -25,7 +26,7 @@ package org.raden.jsonid.utils;
  * case, you are better off deleting ComparableTimSort to eliminate the code
  * duplication. (See Arrays.java for details.)
  */
-class ComparableTimSort {
+public class ComparableTimSort {
 	/**
 	 * This is the minimum sized sequence that will be merged. Shorter sequences
 	 * will be lengthened by calling binarySort. If the entire array is less
@@ -94,7 +95,7 @@ class ComparableTimSort {
 	 */
 	private static final boolean DEBUG = false;
 
-	ComparableTimSort() {
+	public ComparableTimSort() {
 		tmp = new Object[INITIAL_TMP_STORAGE_LENGTH];
 		runBase = new int[40];
 		runLen = new int[40];

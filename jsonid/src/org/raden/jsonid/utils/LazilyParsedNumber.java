@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.raden.jsonid.utils.json;
+package org.raden.jsonid.utils;
 
 import java.io.ObjectStreamException;
 import java.math.BigDecimal;

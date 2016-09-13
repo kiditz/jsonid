@@ -1,10 +1,13 @@
 /**
  * 
  */
-package org.raden.jsonid.utils.json;
+package org.raden.jsonid;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
+import org.raden.jsonid.utils.LazilyParsedNumber;
+import org.raden.jsonid.utils.Predictable;
 
 /**
  * @author Rifky A.B

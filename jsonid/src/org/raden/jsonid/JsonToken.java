@@ -1,4 +1,4 @@
-package org.raden.jsonid.utils.json;
+package org.raden.jsonid;
 
 public enum JsonToken {
 

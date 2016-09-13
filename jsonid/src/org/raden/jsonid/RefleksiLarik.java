@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.raden.jsonid.utils;
+package org.raden.jsonid;
 
 import java.lang.reflect.Array;
 

@@ -11,10 +11,11 @@
  * governing permissions and limitations under the License.
  */
 
-package org.raden.jsonid.utils;
+package org.raden.jsonid;
 
 import java.util.Comparator;
 
+import org.raden.jsonid.utils.ComparableTimSort;
 import org.raden.jsonid.utils.koleksi.Larik;
 
 

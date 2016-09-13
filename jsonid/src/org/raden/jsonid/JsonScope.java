@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.raden.jsonid.utils.json;
+package org.raden.jsonid;
 
 /**
  * @author Rifky A.B

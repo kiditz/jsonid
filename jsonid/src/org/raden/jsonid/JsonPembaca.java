@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.raden.jsonid.utils.json;
+package org.raden.jsonid;
 
 import java.io.IOException;
 import java.io.Reader;

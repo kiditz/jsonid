@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.raden.jsonid.utils.json;
+package org.raden.jsonid;
 
 
 import org.raden.jsonid.utils.koleksi.PetaObyek.Catat;

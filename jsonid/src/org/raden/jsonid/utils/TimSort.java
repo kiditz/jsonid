@@ -33,7 +33,7 @@ import java.util.Comparator;
  * (privately) instantiable; a TimSort instance holds the state of an ongoing
  * sort, assuming the input array is large enough to warrant the full-blown
  * TimSort. Small arrays are sorted in place, using a binary insertion sort.
-/
+*/
 class TimSort<T> {
 	/**
 	 * This is the minimum sized sequence that will be merged. Shorter sequences

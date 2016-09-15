@@ -16,7 +16,10 @@ public class PembacaIterator<T> implements Iterator<T>, Iterable<T> {
 	private boolean validasi = true;
 
 	/**
+	 * Membaca iterator dari larik
 	 * 
+	 * @param larik
+	 *            adalah larik dari tipe generic
 	 */
 	public PembacaIterator(T[] larik) {
 		this.larik = larik;
@@ -70,5 +73,5 @@ public class PembacaIterator<T> implements Iterator<T>, Iterable<T> {
 	public void aturValidasi(boolean validasi) {
 		this.validasi = validasi;
 	}
-	
+
 }

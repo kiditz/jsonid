@@ -1,6 +1,18 @@
-/**
+/*******************************************************************************
+ * Copyright 2016 By Raden Studio.
  * 
- */
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package org.raden.jsonid;
 
 import java.io.IOException;
@@ -8,8 +20,6 @@ import java.io.Reader;
 
 import org.raden.jsonid.utils.LazilyParsedNumber;
 import org.raden.jsonid.utils.koleksi.PetaObyek.Catat;
-
-
 
 /**
  * @author Rifky A.B
@@ -37,7 +47,7 @@ public class JsonParser {
 			return new JsonNilai(pembaca.lanjutBoolean());
 		case NULL:
 			pembaca.lanjutKosong();
-			return new JsonKosong();
+			return JsonKosong.baru();
 		case BEGIN_ARRAY:
 			pembaca.mulaiLarik();
 			JsonLarik larik = new JsonLarik();
@@ -63,8 +73,7 @@ public class JsonParser {
 		}
 	}
 
-	public void tulis(JsonPenulis penulis, JsonElement element)
-			throws IOException {
+	public void tulis(JsonPenulis penulis, JsonElement element) throws IOException {
 		if (element == null || element.iniKosong()) {
 			penulis.nilaiKosong();
 		} else if (element.iniNilai()) {

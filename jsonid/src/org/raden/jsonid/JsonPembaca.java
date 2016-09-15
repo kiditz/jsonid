@@ -1,14 +1,24 @@
-/**
+/*******************************************************************************
+ * Copyright 2016 By Raden Studio.
  * 
- */
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package org.raden.jsonid;
 
 import java.io.IOException;
 import java.io.Reader;
 
 import org.raden.jsonid.utils.RadenKesalahanRuntime;
-
-
 
 /**
  * @author Rifky A.B
@@ -159,8 +169,7 @@ public class JsonPembaca {
 			push(JsonScope.ObyekKosong);
 			peeked = PEEKED_NONE;
 		} else {
-			throw new JsonKesalahan("Kesalahan mulai obyek karena " + peek()
-					+ " dibaris " + getLineNumber() + " kolum "
+			throw new JsonKesalahan("Kesalahan mulai obyek karena " + peek() + " dibaris " + getLineNumber() + " kolum "
 					+ getColumnNumber() + " path " + getPath());
 		}
 	}
@@ -182,8 +191,7 @@ public class JsonPembaca {
 			peeked = PEEKED_NONE;
 			pathIndices[ukuranStack - 1]++;
 		} else {
-			throw new IllegalStateException("Kesalahan kosong  " + peek()
-					+ " at line " + getLineNumber() + " column "
+			throw new IllegalStateException("Kesalahan kosong  " + peek() + " at line " + getLineNumber() + " column "
 					+ getColumnNumber() + " path " + getPath());
 		}
 	}
@@ -201,9 +209,8 @@ public class JsonPembaca {
 		} else if (p == PEEKED_DOUBLE_QUOTED_NAME) {
 			result = raihNilaiKata('"');
 		} else {
-			throw new IllegalStateException("Expected a name but was " + peek()
-					+ " at line " + getLineNumber() + " column "
-					+ getColumnNumber() + " path " + getPath());
+			throw new IllegalStateException("Expected a name but was " + peek() + " at line " + getLineNumber()
+					+ " column " + getColumnNumber() + " path " + getPath());
 		}
 		peeked = PEEKED_NONE;
 		pathNames[ukuranStack - 1] = result;
@@ -228,17 +235,14 @@ public class JsonPembaca {
 		} else if (p == PEEKED_SINGLE_QUOTED || p == PEEKED_DOUBLE_QUOTED) {
 			peekedString = raihNilaiKata(p == PEEKED_SINGLE_QUOTED ? '\'' : '"');
 		} else if (p != PEEKED_BUFFERED) {
-			throw new IllegalStateException("Expected a double but was "
-					+ peek() + " at line " + getLineNumber() + " column "
-					+ getColumnNumber() + " path " + getPath());
+			throw new IllegalStateException("Expected a double but was " + peek() + " at line " + getLineNumber()
+					+ " column " + getColumnNumber() + " path " + getPath());
 		}
 		peeked = PEEKED_BUFFERED;
 		int res = Integer.parseInt(peekedString);
 		if (!lenient && (Double.isNaN(res) || Double.isInfinite(res))) {
-			throw new NumberFormatException(
-					"JSON tidak mendukung nan dan infinite pada angka double: "
-							+ res + " di baris " + getLineNumber() + " kolum "
-							+ getColumnNumber() + " path " + getPath());
+			throw new NumberFormatException("JSON tidak mendukung nan dan infinite pada angka double: " + res
+					+ " di baris " + getLineNumber() + " kolum " + getColumnNumber() + " path " + getPath());
 
 		}
 		peekedString = null;
@@ -248,8 +252,7 @@ public class JsonPembaca {
 	}
 
 	public String toString() {
-		return getClass().getSimpleName() + " at line " + getLineNumber()
-				+ " column " + getColumnNumber();
+		return getClass().getSimpleName() + " at line " + getLineNumber() + " column " + getColumnNumber();
 	}
 
 	public boolean lanjutBoolean() throws IOException {
@@ -266,9 +269,8 @@ public class JsonPembaca {
 			pathIndices[ukuranStack - 1]++;
 			return false;
 		}
-		throw new IllegalStateException("Expected a boolean but was " + peek()
-				+ " at line " + getLineNumber() + " column "
-				+ getColumnNumber() + " path " + getPath());
+		throw new IllegalStateException("Expected a boolean but was " + peek() + " at line " + getLineNumber()
+				+ " column " + getColumnNumber() + " path " + getPath());
 	}
 
 	public long lanjutLong() throws IOException {
@@ -289,17 +291,14 @@ public class JsonPembaca {
 		} else if (p == PEEKED_SINGLE_QUOTED || p == PEEKED_DOUBLE_QUOTED) {
 			peekedString = raihNilaiKata(p == PEEKED_SINGLE_QUOTED ? '\'' : '"');
 		} else if (p != PEEKED_BUFFERED) {
-			throw new IllegalStateException("Expected a double but was "
-					+ peek() + " at line " + getLineNumber() + " column "
-					+ getColumnNumber() + " path " + getPath());
+			throw new IllegalStateException("Expected a double but was " + peek() + " at line " + getLineNumber()
+					+ " column " + getColumnNumber() + " path " + getPath());
 		}
 		peeked = PEEKED_BUFFERED;
 		long res = Long.parseLong(peekedString);
 		if (!lenient && (Double.isNaN(res) || Double.isInfinite(res))) {
-			throw new NumberFormatException(
-					"JSON tidak mendukung nan dan infinite pada angka double: "
-							+ res + " di baris " + getLineNumber() + " kolum "
-							+ getColumnNumber() + " path " + getPath());
+			throw new NumberFormatException("JSON tidak mendukung nan dan infinite pada angka double: " + res
+					+ " di baris " + getLineNumber() + " kolum " + getColumnNumber() + " path " + getPath());
 
 		}
 		peekedString = null;
@@ -326,17 +325,14 @@ public class JsonPembaca {
 		} else if (p == PEEKED_SINGLE_QUOTED || p == PEEKED_DOUBLE_QUOTED) {
 			peekedString = raihNilaiKata(p == PEEKED_SINGLE_QUOTED ? '\'' : '"');
 		} else if (p != PEEKED_BUFFERED) {
-			throw new IllegalStateException("Expected a double but was "
-					+ peek() + " at line " + getLineNumber() + " column "
-					+ getColumnNumber() + " path " + getPath());
+			throw new IllegalStateException("Expected a double but was " + peek() + " at line " + getLineNumber()
+					+ " column " + getColumnNumber() + " path " + getPath());
 		}
 		peeked = PEEKED_BUFFERED;
 		double res = Double.parseDouble(peekedString);
 		if (!lenient && (Double.isNaN(res) || Double.isInfinite(res))) {
-			throw new NumberFormatException(
-					"JSON tidak mendukung nan dan infinite pada angka double: "
-							+ res + " di baris " + getLineNumber() + " kolum "
-							+ getColumnNumber() + " path " + getPath());
+			throw new NumberFormatException("JSON tidak mendukung nan dan infinite pada angka double: " + res
+					+ " di baris " + getLineNumber() + " kolum " + getColumnNumber() + " path " + getPath());
 
 		}
 		peekedString = null;
@@ -367,9 +363,8 @@ public class JsonPembaca {
 			result = new String(buffer, pos, peekedNumberLength);
 			pos += peekedNumberLength;
 		} else {
-			throw new IllegalStateException("Expected a string but was "
-					+ peek() + " at line " + getLineNumber() + " column "
-					+ getColumnNumber() + " path " + getPath());
+			throw new IllegalStateException("Expected a string but was " + peek() + " at line " + getLineNumber()
+					+ " column " + getColumnNumber() + " path " + getPath());
 		}
 		peeked = PEEKED_NONE;
 		pathIndices[ukuranStack - 1]++;
@@ -388,9 +383,8 @@ public class JsonPembaca {
 			pathIndices[ukuranStack - 1]++;
 			peeked = PEEKED_NONE;
 		} else {
-			throw new IllegalStateException("Kesalahan Mulai_Obyek karena "
-					+ peek() + " di baris " + getLineNumber() + " column "
-					+ getColumnNumber() + " path " + getPath());
+			throw new IllegalStateException("Kesalahan Mulai_Obyek karena " + peek() + " di baris " + getLineNumber()
+					+ " column " + getColumnNumber() + " path " + getPath());
 		}
 	}
 
@@ -404,9 +398,8 @@ public class JsonPembaca {
 			pathIndices[ukuranStack - 1] = 0;
 			peeked = PEEKED_NONE;
 		} else {
-			throw new IllegalStateException("Expected BEGIN_ARRAY but was "
-					+ peek() + " at line " + getLineNumber() + " column "
-					+ getColumnNumber() + " path " + getPath());
+			throw new IllegalStateException("Expected BEGIN_ARRAY but was " + peek() + " at line " + getLineNumber()
+					+ " column " + getColumnNumber() + " path " + getPath());
 		}
 	}
 
@@ -420,9 +413,8 @@ public class JsonPembaca {
 			pathIndices[ukuranStack - 1]++;
 			peeked = PEEKED_NONE;
 		} else {
-			throw new IllegalStateException("Expected END_ARRAY but was "
-					+ peek() + " at line " + getLineNumber() + " column "
-					+ getColumnNumber() + " path " + getPath());
+			throw new IllegalStateException("Expected END_ARRAY but was " + peek() + " at line " + getLineNumber()
+					+ " column " + getColumnNumber() + " path " + getPath());
 		}
 	}
 
@@ -544,8 +536,9 @@ public class JsonPembaca {
 	}
 
 	/**
-	 * @return
+	 * @return {@link JsonToken}
 	 * @throws IOException
+	 *             kelasahan io
 	 */
 	public JsonToken peek() throws IOException {
 		int p = peeked;
@@ -603,8 +596,7 @@ public class JsonPembaca {
 			default:
 				throw syntaxError("Unterminated array");
 			}
-		} else if (peekStack == JsonScope.ObyekKosong
-				|| peekStack == JsonScope.ObyekBerisi) {
+		} else if (peekStack == JsonScope.ObyekKosong || peekStack == JsonScope.ObyekBerisi) {
 			stack[ukuranStack - 1] = JsonScope.Nama;
 			// Look for a comma before the next element.
 			if (peekStack == JsonScope.ObyekBerisi) {
@@ -687,8 +679,7 @@ public class JsonPembaca {
 		case ';':
 		case ',':
 			// In lenient mode, a 0-length literal in an array means 'null'.
-			if (peekStack == JsonScope.ArrayKosong
-					|| peekStack == JsonScope.ArrayBerisi) {
+			if (peekStack == JsonScope.ArrayKosong || peekStack == JsonScope.ArrayBerisi) {
 				lenientCek();
 				pos--;
 				return peeked = PEEKED_NULL;
@@ -761,8 +752,7 @@ public class JsonPembaca {
 			}
 		}
 
-		if ((pos + length < limit || isiBuffer(length + 1))
-				&& isLiteral(buffer[pos + length])) {
+		if ((pos + length < limit || isiBuffer(length + 1)) && isLiteral(buffer[pos + length])) {
 			return PEEKED_NONE; // Don't match trues, falsey or nullsoft!
 		}
 
@@ -824,8 +814,7 @@ public class JsonPembaca {
 
 			case 'e':
 			case 'E':
-				if (last == NUMBER_CHAR_DIGIT
-						|| last == NUMBER_CHAR_FRACTION_DIGIT) {
+				if (last == NUMBER_CHAR_DIGIT || last == NUMBER_CHAR_FRACTION_DIGIT) {
 					last = NUMBER_CHAR_EXP_E;
 					continue;
 				}
@@ -859,8 +848,7 @@ public class JsonPembaca {
 					value = newValue;
 				} else if (last == NUMBER_CHAR_DECIMAL) {
 					last = NUMBER_CHAR_FRACTION_DIGIT;
-				} else if (last == NUMBER_CHAR_EXP_E
-						|| last == NUMBER_CHAR_EXP_SIGN) {
+				} else if (last == NUMBER_CHAR_EXP_E || last == NUMBER_CHAR_EXP_SIGN) {
 					last = NUMBER_CHAR_EXP_DIGIT;
 				}
 			}
@@ -868,14 +856,11 @@ public class JsonPembaca {
 
 		// We've read a complete number. Decide if it's a PEEKED_LONG or a
 		// PEEKED_NUMBER.
-		if (last == NUMBER_CHAR_DIGIT && fitsInLong
-				&& (value != Long.MIN_VALUE || negative)) {
+		if (last == NUMBER_CHAR_DIGIT && fitsInLong && (value != Long.MIN_VALUE || negative)) {
 			peekedLong = negative ? value : -value;
 			pos += i;
 			return peeked = PEEKED_LONG;
-		} else if (last == NUMBER_CHAR_DIGIT
-				|| last == NUMBER_CHAR_FRACTION_DIGIT
-				|| last == NUMBER_CHAR_EXP_DIGIT) {
+		} else if (last == NUMBER_CHAR_DIGIT || last == NUMBER_CHAR_FRACTION_DIGIT || last == NUMBER_CHAR_EXP_DIGIT) {
 			peekedNumberLength = i;
 			return peeked = PEEKED_NUMBER;
 		} else {
@@ -888,8 +873,7 @@ public class JsonPembaca {
 		nextNonWhitespace(true);
 		pos--;
 
-		if (pos + NON_EXECUTE_PREFIX.length > limit
-				&& !isiBuffer(NON_EXECUTE_PREFIX.length)) {
+		if (pos + NON_EXECUTE_PREFIX.length > limit && !isiBuffer(NON_EXECUTE_PREFIX.length)) {
 			return;
 		}
 
@@ -905,8 +889,7 @@ public class JsonPembaca {
 
 	private void lenientCek() {
 		if (!lenient)
-			throw new RadenKesalahanRuntime(
-					"atur lenient ke true untuk memperoleh banyak baris json");
+			throw new RadenKesalahanRuntime("atur lenient ke true untuk memperoleh banyak baris json");
 	}
 
 	private char readEscapeCharacter() throws IOException {
@@ -933,8 +916,7 @@ public class JsonPembaca {
 				} else if (c >= 'A' && c <= 'F') {
 					result += (c - 'A' + 10);
 				} else {
-					throw new NumberFormatException("\\u"
-							+ new String(buffer, pos, 4));
+					throw new NumberFormatException("\\u" + new String(buffer, pos, 4));
 				}
 			}
 			pos += 4;
@@ -1078,9 +1060,7 @@ public class JsonPembaca {
 			}
 		}
 		if (throwOnEof) {
-			throw new JsonKesalahan(
-					"Anda yakin ini json? kesalahan ada di baris "
-							+ getLineNumber());
+			throw new JsonKesalahan("Anda yakin ini json? kesalahan ada di baris " + getLineNumber());
 		} else {
 			return -1;
 		}
@@ -1091,8 +1071,8 @@ public class JsonPembaca {
 	 * @return
 	 */
 	private IOException syntaxError(String message) {
-		throw new JsonKesalahan(message + " dibaris " + getLineNumber()
-				+ " kolum " + getColumnNumber() + " path " + getPath());
+		throw new JsonKesalahan(
+				message + " dibaris " + getLineNumber() + " kolum " + getColumnNumber() + " path " + getPath());
 	}
 
 	public String getPath() {
@@ -1136,8 +1116,7 @@ public class JsonPembaca {
 	 * @throws IOException
 	 */
 	private boolean skipTo(String toFind) throws IOException {
-		outer: for (; pos + toFind.length() <= limit
-				|| isiBuffer(toFind.length()); pos++) {
+		outer: for (; pos + toFind.length() <= limit || isiBuffer(toFind.length()); pos++) {
 			if (buffer[pos] == '\n') {
 				lineNumber++;
 				lineStart = pos + 1;
@@ -1184,8 +1163,7 @@ public class JsonPembaca {
 
 		while ((total = in.read(buffer, limit, buffer.length - limit)) != -1) {
 			limit += total;
-			if (lineNumber == 0 && lineStart == 0 && limit > 0
-					&& buffer[0] == '\ufeff') {
+			if (lineNumber == 0 && lineStart == 0 && limit > 0 && buffer[0] == '\ufeff') {
 				++pos;
 				++lineStart;
 				++min;

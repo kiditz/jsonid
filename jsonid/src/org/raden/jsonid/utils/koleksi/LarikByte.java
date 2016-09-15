@@ -3,8 +3,8 @@ package org.raden.jsonid.utils.koleksi;
 import java.util.Arrays;
 
 /**
- * 
- * */
+ * @author kiditz
+ */
 public class LarikByte {
 	private byte[] materi;
 	private int ukuran;
@@ -119,9 +119,6 @@ public class LarikByte {
 		this.materi[indeks] *= nilai;
 	}
 
-	/**
-	 * 
-	 * */
 	public void tambah(byte nilai, int indeks) {
 		if (indeks > ukuran)
 			throw new IndexOutOfBoundsException("Indeks tidak bisa lebih besar dari ukuran " + indeks + " > " + ukuran);

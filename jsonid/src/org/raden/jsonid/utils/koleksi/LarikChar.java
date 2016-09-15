@@ -119,9 +119,6 @@ public class LarikChar {
 		this.materi[indeks] *= nilai;
 	}
 
-	/**
-	 * 
-	 * */
 	public void tambah(char nilai, int indeks) {
 		if (indeks > ukuran)
 			throw new IndexOutOfBoundsException("Indeks tidak bisa lebih besar dari ukuran " + indeks + " > " + ukuran);

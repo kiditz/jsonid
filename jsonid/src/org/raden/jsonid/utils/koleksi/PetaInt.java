@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
-
 /**
  * 
  * {@link PetaInt} adalah implementasi peta yang bersifat seperti
@@ -214,7 +213,7 @@ public class PetaInt<V> implements Iterable<PetaInt.Catat<V>> {
 		Random rand = new Random();
 		do {
 			// Replace the key and value for one of the hashes.
-			
+
 			switch (rand.nextInt(3)) {
 			case 0:
 				kunciEvicted = kunci1;
@@ -715,6 +714,7 @@ public class PetaInt<V> implements Iterable<PetaInt.Catat<V>> {
 		public Catatan(PetaInt<V> map) {
 			super(map);
 		}
+
 		public boolean saatLanjut() {
 			return hasNext();
 		}
@@ -722,6 +722,7 @@ public class PetaInt<V> implements Iterable<PetaInt.Catat<V>> {
 		public Catat<V> lanjut() {
 			return next();
 		}
+
 		public Catat<V> next() {
 			if (!hasNext)
 				throw new NoSuchElementException();
@@ -809,6 +810,7 @@ public class PetaInt<V> implements Iterable<PetaInt.Catat<V>> {
 		public PetaKunci(PetaInt<?> map) {
 			super(map);
 		}
+
 		public boolean saatLanjut() {
 			return hasNext();
 		}
@@ -816,6 +818,7 @@ public class PetaInt<V> implements Iterable<PetaInt.Catat<V>> {
 		public Integer lanjut() {
 			return next();
 		}
+
 		public boolean hasNext() {
 			if (!valid)
 				throw new IllegalStateException("#iterator() cannot be used nested.");
@@ -833,7 +836,11 @@ public class PetaInt<V> implements Iterable<PetaInt.Catat<V>> {
 			return kunci;
 		}
 
-		/** Adds the remaining keys to the array. */
+		/**
+		 * Mengkonversi Peta ke Larik Int
+		 * 
+		 * @return {@link LarikInt}
+		 */
 		public LarikInt keLarik() {
 			LarikInt array = new LarikInt(peta.kapasitas);
 			while (hasNext)

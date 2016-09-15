@@ -1,8 +1,21 @@
-/**
+/*******************************************************************************
+ * Copyright 2016 By Raden Studio.
  * 
- */
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package org.raden.jsonid;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -39,8 +52,6 @@ import org.raden.jsonid.utils.koleksi.Larik;
 import org.raden.jsonid.utils.koleksi.PetaObyek;
 import org.raden.jsonid.utils.koleksi.PetaOrder;
 
-
-
 /**
  * <p>
  * <b> Menulis dan membaca json ke dan dari Pojo (Plain Old Java Object)</b><br>
@@ -55,20 +66,30 @@ import org.raden.jsonid.utils.koleksi.PetaOrder;
  * </p>
  * 
  * 
- * Untuk dapat menulis json anda dapat menggunakan
+ * Untuk dapat serialize dan menulis json anda dapat menggunakan
  * {@linkplain #keJson(Object)}<br>
  * 
  * contoh seperti dibawah ini :
  * 
  * <pre>
- * JsonID jsonId = JsonID.baru(); 
+ * JsonID jsonId = JsonID.baru();
  * ObyekSaya obyek = new ObyekSaya();
- * System.out.println(jsonID.keJson(obyek));
+ * String json = jsonID.keJson(obyek);
+ * System.out.println(json);
+ * </pre>
+ * <p>
+ * Sedangkan untuk membaca dan deserialize json anda dapat menggunakan
+ * {@linkplain #dariJson(File, Class)}
+ * </p>
+ * 
+ * contoh seperti dibawah ini :
  * 
  * <pre>
- * <p>
+ * obyek = jsonId.dariJson(json, ObyekSaya.class);
+ * System.out.println(obyek);
+ * </pre>
  * 
- * @author Rifky A.B
+ * @author kiditz
  * 
  */
 public class JsonID {
@@ -85,10 +106,17 @@ public class JsonID {
 	private String spasi = "  ";
 	private boolean pencetakCantik = false;
 	// so, set to true for advance programmer only. :D happy coding
-	private boolean debug = false;
+	private boolean debug = true;
 	private boolean lenient = false;
 	private boolean prototipe = false;
 
+	/**
+	 * Instant {@link #baru()} digunakan untuk memanggil jsonID dengan method
+	 * statis untuk memanggil konstruktor dari {@link JsonID} yang bersifat
+	 * private.
+	 * 
+	 * @return new {@link JsonID}
+	 */
 	public static JsonID baru() {
 		return new JsonID();
 	}
@@ -111,35 +139,93 @@ public class JsonID {
 	}
 
 	/**
+	 * Membuat Serializer
+	 * 
+	 * @param tipe
+	 *            adalah tipe dari serializer
 	 * @param serializer
-	 *            the serializer to set
+	 *            adalah serializer yang ingin diatur
+	 * @return kelas ini sendiri
+	 * 
 	 */
-
 	public JsonID aturSerializer(Class<?> tipe, JsonSerializer<?> serializer) {
 		this.kelasSerializer.taruh(tipe, serializer);
 		return this;
 	}
 
+	/**
+	 * Mengaktifkan prototipe untuk menggunakan nilai default yang terdapat di
+	 * dalam kelas yang ingin di ubah kedalam json. saat ini tidak diaktifkan
+	 * maka nilai default akan bernilai null dan untuk mengisi nilai tersebut
+	 * maka nilai tersebut di panggil melalui obyek baru.
+	 * 
+	 * nilai default dari {@linkplain #prototipe} adalah false
+	 * 
+	 * @return kelas ini
+	 */
 	public JsonID aktifkanPrototipe() {
 		this.prototipe = true;
 		return this;
 	}
 
+	/**
+	 * Mengatur whitespace yang ingin di gunakan untuk indent pada json yang
+	 * akan memberikan hasil pencetak cantik
+	 * 
+	 * @param spasi
+	 *            adalah nilai whitespace
+	 * @return kelas ini
+	 */
 	public JsonID aturSpasi(String spasi) {
 		this.spasi = spasi;
 		return this;
 	}
 
 	/**
+	 * Mematikan nama enum akan menggunakan {@link Enum#toString()} untuk
+	 * menulis nilai enumurasi, mungkin tidak akan dapat meraih nilai unique
+	 * dengan mematikan ini. dan akan menggunakan {@link Enum#name()} ketika
+	 * true. Nilai awalnya adalah true.
+	 * 
+	 * @return kelas ini
+	 */
+	public JsonID matikanNamaEnum() {
+		this.namaEnum = false;
+		return this;
+	}
+
+	/**
+	 * Ganti nama tipe dari kelas ke nama lain yang anda inginkan. nilai awalnya
+	 * adalah <b>'kelas'</b>
+	 * 
+	 * @param namaTipe
+	 *            adalah nama dari tag kelas yang ingin diganti
+	 * @return kelas ini
+	 */
+	public JsonID aturNamaTipe(String namaTipe) {
+		this.namaTipe = namaTipe;
+		return this;
+	}
+
+	/**
+	 * Mengatur pattern tanggal yang ingin digunakan saat menggunaka obyek
+	 * {@link Date}. patter ini menggunakan {@link SimpleDateFormat} untuk
+	 * menyesuaikan format tanggal yang di inginkan oleh end user
+	 * 
 	 * @param patternTanggal
-	 *            the patternTanggal to set
+	 *            adalah format tanggal yang ingin diatur
+	 * @return kelas ini
 	 */
 	public JsonID aturPatternTanggal(String patternTanggal) {
 		this.patternTanggal = patternTanggal;
 		return this;
 	}
 
-	private void aturPenulis(Writer writer) {
+	/**
+	 * @param writer
+	 *            adalah jenis writer yang digunakan sebagai output json
+	 */
+	public void aturPenulis(Writer writer) {
 		// if (!(writer instanceof JsonPenulis))
 		this.penulis = new JsonPenulis(writer);
 		this.penulis.aturHtmlAman(false);
@@ -149,80 +235,219 @@ public class JsonID {
 			this.penulis.aturIndent(spasi);
 	}
 
-	public JsonID aturTag(Class<?> kunci, String nilai) {
-		kelasKeTag.taruh(kunci, nilai);
-		tagKekelas.taruh(nilai, kunci);
+	/**
+	 * Menambah tag akan memudahkan json untuk dibaca
+	 * 
+	 * @param kunci
+	 *            adalah kelas yang di input kedalam json
+	 * @param nama
+	 *            adalah nama variabel yang ingin di ubah
+	 * @return kelas ini
+	 */
+	public JsonID tambahTag(Class<?> kunci, String nama) {
+		tagKekelas.taruh(nama, kunci);
+		kelasKeTag.taruh(kunci, nama);
 		return this;
 	}
 
 	/**
-	 * @param gunakanIndent
-	 *            the gunakanIndent to set
+	 * Mengaktifkan spasi alias print cantik yang akan membuat json menjadi
+	 * lebih mudah di baca oleh mata manusia.
+	 * 
+	 * @return kelas ini
 	 */
 	public JsonID aktifkanSpasi() {
 		this.pencetakCantik = true;
 		return this;
 	}
 
+	/**
+	 * Mengecek apakah spasi sudah aktif atau belum
+	 * 
+	 * @return true apabila sudah dipanggil melalui {@link #aktifkanSpasi()} dan
+	 *         false apabila belum dipanggil
+	 */
 	public boolean spasiAktif() {
 		return this.pencetakCantik;
 	}
 
 	/**
-	 * @param lenient
-	 *            the lenient to set
+	 * Mengaktifkan lenient untuk membaca json
+	 * 
+	 * @see JsonPenulis#aturLenient(boolean)
+	 * @return kelas ini
 	 */
 	public JsonID aktifkanLenient() {
 		this.lenient = true;
 		return this;
 	}
 
+	/**
+	 * Memeriksa apakah lenient sudah aktif atau belum
+	 * 
+	 * @return true apa bila lenient sudah diaktifkan via
+	 *         {@link #aktifkanLenient()} dan false apabila belum diaktifkan.
+	 * 
+	 */
 	public boolean lenientAktif() {
 		return lenient;
 	}
 
+	/**
+	 * Meraih spasi yang digunakan untuk pencetak cantik
+	 * 
+	 * @return {@link #spasi} adalah nilai spasi, nilai awalnya adalah <b>"
+	 *         "</b>
+	 */
 	public String raihSpasi() {
 		return spasi;
 	}
 
-	public String raihTag(Class<?> type) {
-		return kelasKeTag.raih(type);
+	/**
+	 * Meraih nilai tag dari kunci yang digunakan
+	 * 
+	 * @param kunci
+	 *            adalah kunci tag
+	 * @return nama tag apabila kunci ditemuka, atau null apabila tidak
+	 *         ditemukan
+	 */
+	public String raihTag(Class<?> kunci) {
+		return kelasKeTag.raih(kunci);
 	}
 
-	public Class<?> raihKelas(String nama) {
-		return tagKekelas.raih(nama);
+	/**
+	 * Meraih nilai kunci dari nama tag yang digunakan
+	 * 
+	 * @param kunci
+	 *            adalah kunci kelas
+	 * @return kelas yang digunakan apabila kunci ditemukan, dan null apabila
+	 *         tidak ditemukan
+	 */
+	public Class<?> raihKunci(String kunci) {
+		return tagKekelas.raih(kunci);
 	}
 
+	/**
+	 * Melakukan konversi {@link Object} ke json {@link String}
+	 * 
+	 * @param obyek
+	 *            adalah obyek yang ingin di konversi ke json
+	 * @return kelas ini
+	 */
 	public String keJson(Object obyek) {
 		return this.keJson(obyek, obyek != null ? obyek.getClass() : null, (Class<?>) null);
 	}
 
+	/**
+	 * Melakukan konversi {@link Object} ke json {@link String}
+	 * 
+	 * @param obyek
+	 *            adalah obyek yang ingin di konversi ke json
+	 * @param tipeDiketahui
+	 *            adalah tipe yang di ketahui oleh user
+	 * @return json berupa string
+	 */
 	public String keJson(Object obyek, Class<?> tipeDiketahui) {
 		return this.keJson(obyek, tipeDiketahui, (Class<?>) null);
 	}
 
+	/**
+	 * Melakukan konversi {@link Object} ke json {@link String}. untuk menghapus
+	 * kelas tag anda bisa mengisi tipeDiketahui dengan kasus spesial.
+	 * 
+	 * @param obyek
+	 *            adalah obyek yang ingin di konversi ke json
+	 * @param tipeDiketahui
+	 *            bisa berupa kasus spesial berupa {@link HashMap},
+	 *            {@link PetaObyek}, {@link Larik}, {@link ArrayList} dan
+	 *            lain-lain yang memiliki bermacam-macam nilai.
+	 * @param tipeElement
+	 *            adalah tipe yang di ketahui oleh user
+	 * @return json berupa string
+	 */
 	public String keJson(Object obyek, Class<?> tipeDiketahui, Class<?> tipeElement) {
 		StringWriter buff = new StringWriter();
 		this.keJson(obyek, tipeDiketahui, tipeElement, buff);
 		return buff.toString();
 	}
 
-	public void keJson(Object obyek, File berkas) {
-		this.keJson(obyek, obyek != null ? obyek.getClass() : null, null, berkas);
+	/**
+	 * Melakukan konversi {@link Object} ke json {@link String}
+	 * 
+	 * @param nilai
+	 *            adalah nilai obyek yang ingin di konversi ke json
+	 * 
+	 * @param berkas
+	 *            adalah file output berupa {@link File} yang dipakai untuk
+	 *            penyimpanan json
+	 * 
+	 */
+	public void keJson(Object nilai, File berkas) {
+		this.keJson(nilai, nilai != null ? nilai.getClass() : null, null, berkas);
 	}
 
-	public void keJson(Object obyek, Class<?> tipeDiketahui, File berkas) {
-		this.keJson(obyek, tipeDiketahui, null, berkas);
+	/**
+	 * Melakukan konversi {@link Object} ke json {@link String}
+	 * 
+	 * @param nilai
+	 *            adalah obyek yang ingin di konversi ke json
+	 * @param tipeDiketahui
+	 *            bisa berupa kasus spesial berupa {@link HashMap},
+	 *            {@link PetaObyek}, {@link Larik}, {@link ArrayList} dan
+	 *            lain-lain yang memiliki bermacam-macam nilai *
+	 * @param berkas
+	 *            adalah file output berupa {@link File} yang dipakai untuk
+	 *            penyimpanan json
+	 */
+	public void keJson(Object nilai, Class<?> tipeDiketahui, File berkas) {
+		this.keJson(nilai, tipeDiketahui, null, berkas);
 	}
 
-	public void keJson(Object obyek, Writer penulis) {
-		this.keJson(obyek, obyek != null ? obyek.getClass() : null, null, penulis);
+	/**
+	 * Melakukan konversi {@link Object} ke json {@link String}
+	 * 
+	 * @param nilai
+	 *            adalah obyek yang ingin di konversi ke json
+	 * @param penulis
+	 *            adalah file output berupa {@link Writer} yang dipakai untuk
+	 *            penyimpanan json
+	 */
+	public void keJson(Object nilai, Writer penulis) {
+		this.keJson(nilai, nilai != null ? nilai.getClass() : null, null, penulis);
 	}
 
+	/**
+	 * Melakukan konversi {@link Object} ke json {@link String}
+	 * 
+	 * @param obyek
+	 *            adalah obyek yang ingin di konversi ke json
+	 * @param tipeDiketahui
+	 *            bisa berupa kasus spesial berupa {@link HashMap},
+	 *            {@link PetaObyek}, {@link Larik}, {@link ArrayList} dan
+	 *            lain-lain yang memiliki bermacam-macam nilai
+	 * @param penulis
+	 *            adalah file output berupa {@link Writer} yang dipakai untuk
+	 *            penyimpanan json
+	 */
 	public void keJson(Object obyek, Class<?> tipeDiketahui, Writer penulis) {
 		this.keJson(obyek, tipeDiketahui, null, penulis);
 	}
 
+	/**
+	 * Melakukan konversi {@link Object} ke json {@link String}
+	 * 
+	 * @param obyek
+	 *            adalah obyek yang ingin di konversi ke json
+	 * @param tipeDiketahui
+	 *            bisa berupa kasus spesial berupa {@link HashMap},
+	 *            {@link PetaObyek}, {@link Larik}, {@link ArrayList} dan
+	 *            lain-lain yang memiliki bermacam-macam nilai
+	 * @param tipeElement
+	 *            adalah element yang merupakan sebuah kelas
+	 * @param berkas
+	 *            adalah file output berupa {@link File} yang dipakai untuk
+	 *            penyimpanan json
+	 */
 	public void keJson(Object obyek, Class<?> tipeDiketahui, Class<?> tipeElement, File berkas) {
 		if (berkas == null)
 			throw new NullPointerException("berkas = null");
@@ -243,6 +468,21 @@ public class JsonID {
 
 	}
 
+	/**
+	 * Melakukan konversi {@link Object} ke json {@link String}
+	 * 
+	 * @param obyek
+	 *            adalah obyek yang ingin di konversi ke json
+	 * @param tipeDiketahui
+	 *            bisa berupa kasus spesial berupa {@link HashMap},
+	 *            {@link PetaObyek}, {@link Larik}, {@link ArrayList} dan
+	 *            lain-lain yang memiliki bermacam-macam nilai
+	 * @param tipeElement
+	 *            adalah element yang merupakan sebuah kelas
+	 * @param writer
+	 *            adalah file output berupa {@link Writer} yang dipakai untuk
+	 *            penyimpanan json
+	 */
 	public void keJson(Object obyek, Class<?> tipeDiketahui, Class<?> tipeElement, Writer writer) {
 		try {
 			this.aturPenulis(writer);
@@ -257,6 +497,19 @@ public class JsonID {
 		}
 	}
 
+	/**
+	 * Menulis nilai json <b>Catatan</b> jangan menggunakan
+	 * 
+	 * @param nilai
+	 *            hanya dapat digunakan untuk tipe primitif dan memiliki sifat
+	 *            nullable
+	 * @throws JsonKesalahan
+	 *             saat menggunakan {@link #tulisMulaiObyek()} dan
+	 *             {@link #tulisAkhirObyek()} saat menggunakan nilai dalam
+	 *             method ini. untuk mengatasinya. harap gunakan
+	 *             {@link #tulisNilai(String, Object)} yang memiliki parameter
+	 *             nama
+	 */
 	public void tulisNilai(Object nilai) {
 		if (nilai == null)
 			tulisNilai(nilai, null, null);
@@ -264,15 +517,59 @@ public class JsonID {
 			tulisNilai(nilai, nilai.getClass(), null);
 	}
 
+	/**
+	 * Menulis nilai json <b>Catatan</b> jangan menggunakan
+	 * 
+	 * @param nilai
+	 *            hanya dapat digunakan untuk tipe primitif dan memiliki sifat
+	 *            nullable
+	 * @param tipeDiketahui
+	 *            adalah tipe yang diketahui oleh user
+	 * @throws JsonKesalahan
+	 *             saat menggunakan {@link #tulisMulaiObyek()} dan
+	 *             {@link #tulisAkhirObyek()} saat menggunakan nilai dalam
+	 *             method ini.
+	 */
 	public void tulisNilai(Object nilai, Class<?> tipeDiketahui) {
 		tulisNilai(nilai, tipeDiketahui, null);
 	}
 
+	/**
+	 * Melakukan konversi {@link Object} ke json {@link String} dengan
+	 * menggunakan nama
+	 * 
+	 * @param nama
+	 *            adalah nama variable json
+	 * @param nilai
+	 *            adalah obyek yang ingin di konversi ke json
+	 * @param tipeDiketahui
+	 *            bisa berupa kasus spesial berupa {@link HashMap},
+	 *            {@link PetaObyek}, {@link Larik}, {@link ArrayList} dan
+	 *            lain-lain yang memiliki bermacam-macam nilai
+	 * @param tipeElement
+	 *            adalah element yang merupakan sebuah kelas
+	 * 
+	 */
 	public void tulisNilai(String nama, Object nilai, Class<?> tipeDiketahui, Class<?> tipeElement) {
 		penulis.nama(nama);
 		tulisNilai(nilai, tipeDiketahui, tipeElement);
 	}
 
+	/**
+	 * Mapping json untuk menulis nilai dari setiap variabel ini adalah kelas
+	 * dasar yang membentuk method {@link #keJson} dan seluruh method lain yang
+	 * berhubungan dengan serialize json
+	 * 
+	 * @param nilai
+	 *            adalah inisialisasi nilai dari variabel
+	 * @param tipeDiketahui
+	 *            bisa berupa kasus spesial berupa {@link HashMap},
+	 *            {@link PetaObyek}, {@link Larik}, {@link ArrayList} dan
+	 *            lain-lain yang memiliki bermacam-macam nilai
+	 * @param tipeElement
+	 *            adalah element yang merupakan sebuah kelas
+	 * 
+	 */
 	public void tulisNilai(Object nilai, Class<?> tipeDiketahui, Class<?> tipeElement) {
 		try {
 			if (nilai == null) {
@@ -284,7 +581,6 @@ public class JsonID {
 					|| tipeDiketahui == Long.class || tipeDiketahui == Double.class || tipeDiketahui == Short.class
 					|| tipeDiketahui == Byte.class || tipeDiketahui == Character.class) {
 				penulis.nilai(nilai);
-				// Do Not execute the next beybehhhh
 				return;
 			}
 			Class<?> tipeAktual = nilai.getClass();
@@ -295,7 +591,6 @@ public class JsonID {
 				tulisMulaiObyek(tipeAktual, null);
 				tulisNilai("nilai", nilai);
 				tulisAkhirObyek();
-				// Do Not execute the next beybehhhh
 				return;
 			}
 
@@ -317,7 +612,6 @@ public class JsonID {
 					tipeDiketahui = Date.class;
 				DateFormat format = new SimpleDateFormat(patternTanggal);
 				penulis.nilai(format.format((Date) nilai));
-				// Do Not execute the next beybehhhh
 				return;
 			}
 
@@ -333,7 +627,6 @@ public class JsonID {
 					tulisNilai(((ArrayList<?>) nilai).get(i), tipeElement, null);
 				}
 				tulisAkhirLarik();
-				// Do Not execute the next beybehhhh
 				if (debug)
 					System.out.println("menulis via tipe " + tipeAktual.getName());
 				return;
@@ -380,8 +673,6 @@ public class JsonID {
 				if (debug)
 					System.out.println("menulis via " + nilai.getClass().getName());
 				Larik<?> larik = (Larik<?>) nilai;
-				if (tipeElement == null)
-					throw new JsonKesalahan("Tipe Element tidak boloh kosong saat menulis via Larik");
 				tulisMulaiLarik();
 				for (int i = 0; i < larik.ukuran(); i++) {
 					tulisNilai(((Larik<?>) nilai).raih(i), tipeElement, null);
@@ -396,7 +687,6 @@ public class JsonID {
 
 				for (PetaObyek.Catat<?, ?> catat : ((PetaObyek<?, ?>) nilai).catatan()) {
 					penulis.nama(konversiKeString(catat.kunci));
-
 					tulisNilai(catat.nilai, tipeElement, null);
 				}
 				tulisAkhirObyek();
@@ -406,13 +696,9 @@ public class JsonID {
 			if (nilai instanceof Map<?, ?>) {
 				if (tipeDiketahui == null)
 					tipeDiketahui = HashMap.class;
-
 				tulisMulaiObyek(tipeAktual, tipeDiketahui);
 				for (Entry<?, ?> entry : ((Map<?, ?>) nilai).entrySet()) {
 					penulis.nama(konversiKeString(entry.getKey()));
-					if (tipeElement == null) {
-						throw new JsonKesalahan("tipeElement tidak boleh null");
-					}
 					tulisNilai(entry.getValue(), tipeElement, null);
 				}
 				tulisAkhirObyek();
@@ -433,7 +719,6 @@ public class JsonID {
 				}
 				return;
 			}
-
 			tulisMulaiObyek(tipeAktual, tipeDiketahui);
 			tulisField(nilai);
 			tulisAkhirObyek();
@@ -442,14 +727,28 @@ public class JsonID {
 		}
 	}
 
-	public void tulisNilai(String name, Object nilai) {
-		penulis.nama(name);
+	/**
+	 * Menulis nilai json menggunakan nama dapat digunakan sebagai obyek
+	 * 
+	 * @param nama
+	 *            adalah inisialisasi nama variabel
+	 * @param nilai
+	 *            adalah inisialisasi nilai dari variabel
+	 */
+	public void tulisNilai(String nama, Object nilai) {
+		penulis.nama(nama);
 		if (nilai == null)
 			tulisNilai(nilai, null, null);
 		else
 			tulisNilai(nilai, nilai.getClass(), null);
 	}
 
+	/**
+	 * Mengakhiri penulisan obyek json
+	 * 
+	 * @throws JsonKesalahan
+	 *             saat anda belum memanggil {@link #tulisMulaiObyek()}
+	 */
 	public void tulisAkhirObyek() {
 		try {
 			penulis.akhirObyek();
@@ -458,6 +757,14 @@ public class JsonID {
 		}
 	}
 
+	/**
+	 * Memulai penulisan obyek dengan nama harus berada dalam nested obyek.
+	 * 
+	 * @throws JsonKesalahan
+	 *             saat nama tidak berada di dalam nested obyek
+	 * @param nama
+	 *            adalah inisialisasi nama obyek
+	 */
 	public void tulisMulaiObyek(String nama) {
 		try {
 			penulis.nama(nama);
@@ -467,6 +774,13 @@ public class JsonID {
 		tulisMulaiObyek();
 	}
 
+	/**
+	 * Memulai penulisan obyek dengan nama harus berada dalam nested obyek.
+	 * 
+	 * @throws JsonKesalahan
+	 *             saat nama tidak berada di dalam nested obyek
+	 * 
+	 */
 	public void tulisMulaiObyek() {
 		try {
 			penulis.mulaiObyek();
@@ -475,11 +789,37 @@ public class JsonID {
 		}
 	}
 
+	/**
+	 * Memulai penulisan obyek dengan nama harus berada dalam nested obyek.
+	 * 
+	 * @throws JsonKesalahan
+	 *             saat nama tidak berada di dalam nested obyek
+	 * @param nama
+	 *            adalah inisialisasi nama obyek
+	 * @param tipeAktual
+	 *            merupakan tipe aktual yang dapat dibaca melalui
+	 *            {@link Object#getClass()}
+	 * 
+	 * @param tipeDiketahui
+	 *            adalah tipe yang diketahui oleh user
+	 */
 	public void tulisMulaiObyek(String nama, Class<?> tipeAktual, Class<?> tipeDiketahui) {
 		penulis.nama(nama);
 		tulisMulaiObyek(tipeAktual, tipeDiketahui);
 	}
 
+	/**
+	 * Memulai penulisan obyek dengan nama harus berada dalam nested obyek.
+	 * 
+	 * @throws JsonKesalahan
+	 *             saat nama tidak berada di dalam nested obyek
+	 * @param tipeAktual
+	 *            merupakan tipe aktual yang dapat dibaca melalui
+	 *            {@link Object#getClass()}
+	 * 
+	 * @param tipeDiketahui
+	 *            adalah tipe yang diketahui oleh user
+	 */
 	public void tulisMulaiObyek(Class<?> tipeAktual, Class<?> tipeDiketahui) {
 		try {
 			penulis.mulaiObyek();
@@ -490,6 +830,19 @@ public class JsonID {
 			tulisTipe(tipeAktual);
 	}
 
+	/**
+	 * Memulai penulisan larik dengan nama harus berada dalam nested obyek.
+	 * 
+	 * @throws JsonKesalahan
+	 *             saat nama tidak berada di dalam nested obyek
+	 * 
+	 * @param tipeAktual
+	 *            merupakan tipe aktual yang dapat dibaca melalui
+	 *            {@link Object#getClass()}
+	 * 
+	 * @param tipeDiketahui
+	 *            adalah tipe yang diketahui oleh user
+	 */
 	public void tulisMulaiLarik(Class<?> tipeAktual, Class<?> tipeDiketahui) {
 		try {
 			penulis.mulaiLarik();
@@ -500,15 +853,29 @@ public class JsonID {
 			tulisTipe(tipeAktual);
 	}
 
+	/**
+	 * Memulai penulisan larik dengan nama harus berada dalam nested obyek atau.
+	 * 
+	 * @throws JsonKesalahan
+	 *             saat nama tidak berada di dalam nested obyek atau larik
+	 * @param nama
+	 *            adalah inisialisasi nama larik
+	 */
 	public void tulisMulaiLarik(String nama) {
 		try {
 			penulis.nama(nama);
-			penulis.mulaiLarik();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new JsonKesalahan(e);
 		}
+		tulisMulaiLarik();
 	}
 
+	/**
+	 * Memulai penulisan larik dengan nama harus berada dalam nested obyek.
+	 * 
+	 * @throws JsonKesalahan
+	 *             saat nama tidak berada di dalam nested larik
+	 */
 	public void tulisMulaiLarik() {
 		try {
 			penulis.mulaiLarik();
@@ -517,6 +884,9 @@ public class JsonID {
 		}
 	}
 
+	/**
+	 * Mengakhiri penulisan larik
+	 */
 	public void tulisAkhirLarik() {
 		try {
 			penulis.akhirLarik();
@@ -525,21 +895,38 @@ public class JsonID {
 		}
 	}
 
-	public void tulisTipe(Class<?> type) {
+	/**
+	 * Menulis kelas tag untuk di gunakan dalam kelas saat tipe tidak diketahui
+	 * 
+	 * @param tipe
+	 *            adalah tipe kelas
+	 */
+	public void tulisTipe(Class<?> tipe) {
 		if (namaTipe == null)
 			return;
-		String className = raihTag(type);
+		String className = raihTag(tipe);
 		if (className == null)
-			className = type.getName();
+			className = tipe.getName();
 		try {
 			penulis.atur(namaTipe, className);
 		} catch (Exception ex) {
 			throw new JsonKesalahan(ex);
 		}
 		if (debug)
-			System.out.println("Menulis tipe: " + type.getName());
+			System.out.println("Menulis tipe: " + tipe.getName());
 	}
 
+	/**
+	 * Deserialize json menggunakan {@link Reader} dan tipe
+	 * 
+	 * @param reader
+	 *            adalah jenis pembaca seperti {@link BufferedReader} etc.
+	 * @param tipe
+	 *            adalah tipe dari kelas yang ingin di deserialize
+	 * @param <T>
+	 *            adalah obyek yang akan di deserialize
+	 * @return T baca nilai json
+	 */
 	public <T> T dariJson(Reader reader, Class<?> tipe) {
 		try {
 			JsonPembaca pembaca = new JsonPembaca(reader);
@@ -550,6 +937,21 @@ public class JsonID {
 		}
 	}
 
+	/**
+	 * Deserialize json menggunakan {@link Reader} dan tipe
+	 * 
+	 * @param reader
+	 *            adalah jenis pembaca seperti {@link BufferedReader} etc.
+	 * @param tipe
+	 *            adalah tipe dari kelas yang ingin di deserialize
+	 * @param element
+	 *            saat menggunakan kasus spesial seperti {@link ArrayList},
+	 *            {@link Larik}, maka tipe diketahui adalah Larik.class atau
+	 *            ArrayList.class dan element adalah kelas yang mau digunakan
+	 * @param <T>
+	 *            adalah obyek yang akan di deserialize
+	 * @return T baca nilai json
+	 */
 	public <T> T dariJson(Reader reader, Class<?> tipe, Class<?> element) {
 		try {
 			JsonPembaca pembaca = new JsonPembaca(reader);
@@ -560,6 +962,17 @@ public class JsonID {
 		}
 	}
 
+	/**
+	 * Deserialize json menggunakan {@link Reader} dan tipe
+	 * 
+	 * @param stream
+	 *            adalah jenis pembaca seperti {@link InputStreamReader} etc.
+	 * @param tipe
+	 *            adalah tipe dari kelas yang ingin di deserialize
+	 * @param <T>
+	 *            adalah obyek yang akan di deserialize
+	 * @return T baca nilai json
+	 */
 	public <T> T dariJson(InputStream stream, Class<?> tipe) {
 		try {
 			JsonPembaca pembaca = new JsonPembaca(new InputStreamReader(stream));
@@ -570,6 +983,22 @@ public class JsonID {
 		}
 	}
 
+	/**
+	 * Deserialize json menggunakan {@link InputStream} dan tipe
+	 * 
+	 * @param stream
+	 *            adalah jenis pembaca seperti {@link InputStreamReader},
+	 *            {@link FileInputStream} etc.
+	 * @param tipe
+	 *            adalah tipe dari kelas yang ingin di deserialize
+	 * @param element
+	 *            saat menggunakan kasus spesial seperti {@link ArrayList},
+	 *            {@link Larik}, maka tipe diketahui adalah Larik.class atau
+	 *            ArrayList.class dan element adalah kelas yang mau digunakan
+	 * @param <T>
+	 *            adalah obyek yang akan di deserialize
+	 * @return T baca nilai json
+	 */
 	public <T> T dariJson(InputStream stream, Class<?> tipe, Class<?> element) {
 		try {
 			JsonPembaca pembaca = new JsonPembaca(new InputStreamReader(stream));
@@ -580,6 +1009,17 @@ public class JsonID {
 		}
 	}
 
+	/**
+	 * Deserialize json menggunakan {@link InputStream} dan tipe
+	 * 
+	 * @param berkas
+	 *            adalah jenis pembaca seperti {@link File}, etc.
+	 * @param tipe
+	 *            adalah tipe dari kelas yang ingin di deserialize
+	 * @param <T>
+	 *            adalah obyek yang akan di deserialize
+	 * @return T baca nilai json
+	 */
 	public <T> T dariJson(File berkas, Class<?> tipe) {
 		try {
 			JsonPembaca pembaca = new JsonPembaca(new InputStreamReader(new FileInputStream(berkas)));
@@ -590,6 +1030,22 @@ public class JsonID {
 		}
 	}
 
+	/**
+	 * Deserialize json menggunakan {@link InputStream} dan tipe
+	 * 
+	 * @param berkas
+	 *            adalah jenis pembaca seperti {@link InputStreamReader},
+	 *            {@link FileInputStream} etc.
+	 * @param tipe
+	 *            adalah tipe dari kelas yang ingin di deserialize
+	 * @param element
+	 *            saat menggunakan kasus spesial seperti {@link ArrayList},
+	 *            {@link Larik}, maka tipe diketahui adalah Larik.class atau
+	 *            ArrayList.class dan element adalah kelas yang mau digunakan
+	 * @param <T>
+	 *            adalah obyek yang akan di deserialize
+	 * @return T baca nilai json
+	 */
 	public <T> T dariJson(File berkas, Class<?> tipe, Class<?> element) {
 		try {
 			JsonPembaca pembaca = new JsonPembaca(new InputStreamReader(new FileInputStream(berkas)));
@@ -600,10 +1056,38 @@ public class JsonID {
 		}
 	}
 
+	/**
+	 * Deserialize json menggunakan {@link InputStream} dan tipe
+	 * 
+	 * @param json
+	 *            adalah sebuah string json
+	 * @param tipe
+	 * 
+	 *            adalah tipe dari kelas yang ingin di deserialize
+	 * @param <T>
+	 *            adalah obyek yang akan di deserialize
+	 * @return T baca nilai json
+	 */
 	public <T> T dariJson(String json, Class<?> tipe) {
 		return dariJson(json, tipe, null);
 	}
 
+	/**
+	 * Deserialize json menggunakan {@link InputStream} dan tipe
+	 * 
+	 * @param json
+	 *            adalah sebuah string json
+	 * @param tipe
+	 *            adalah tipe berupa kasus spesial seperti {@link ArrayList},
+	 *            {@link Larik}, etc
+	 * @param element
+	 *            saat menggunakan kasus spesial seperti {@link ArrayList},
+	 *            {@link Larik}, maka tipe diketahui adalah Larik.class atau
+	 *            ArrayList.class dan element adalah kelas yang mau digunakan
+	 * @param <T>
+	 *            adalah obyek yang akan di deserialize
+	 * @return T baca nilai json
+	 */
 	public <T> T dariJson(String json, Class<?> tipe, Class<?> element) {
 		JsonPembaca pembaca = new JsonPembaca(new StringReader(json));
 		pembaca.aturLenient(lenient);
@@ -914,6 +1398,7 @@ public class JsonID {
 		int i = 0;
 		for (FieldData fieldData : fields.nilaiPeta()) {
 			Field field = fieldData.field;
+
 			try {
 				Object nilai = field.get(object);
 				if (nilaiDefault != null) {
@@ -933,6 +1418,7 @@ public class JsonID {
 				}
 				if (debug)
 					System.out.println("Menulis field: " + field.getName() + " (" + tipe.getName() + ")");
+
 				penulis.nama(field.getName());
 				tulisNilai(nilai, field.getType(), fieldData.element);
 			} catch (IllegalAccessException e) {

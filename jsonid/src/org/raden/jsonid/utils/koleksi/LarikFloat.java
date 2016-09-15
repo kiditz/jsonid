@@ -3,8 +3,8 @@ package org.raden.jsonid.utils.koleksi;
 import java.util.Arrays;
 
 /**
- * 
- * */
+ * @author kiditz
+ */
 public class LarikFloat {
 	private float[] materi;
 	private int ukuran;
@@ -39,7 +39,7 @@ public class LarikFloat {
 		this.materi = new float[ukuran];
 		System.arraycopy(larik.materi, 0, this.materi, 0, this.ukuran);
 	}
-	
+
 	public void tambah(float nilai) {
 		float[] materi = this.materi;
 		if (ukuran == materi.length)
@@ -118,9 +118,7 @@ public class LarikFloat {
 			throw new IndexOutOfBoundsException("Indeks tidak bisa lebih besar dari ukuran " + indeks + " > " + ukuran);
 		this.materi[indeks] *= nilai;
 	}
-	/**
-	 * 
-	 * */
+
 	public void tambah(float nilai, int indeks) {
 		if (indeks > ukuran)
 			throw new IndexOutOfBoundsException("Indeks tidak bisa lebih besar dari ukuran " + indeks + " > " + ukuran);

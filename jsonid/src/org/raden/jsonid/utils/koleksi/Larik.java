@@ -1,6 +1,19 @@
-/**
+/*******************************************************************************
+ * Copyright 2016 By Raden Studio.
  * 
- */
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
+
 package org.raden.jsonid.utils.koleksi;
 
 import java.io.Serializable;
@@ -10,15 +23,12 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
-import org.raden.jsonid.RefleksiLarik;
-import org.raden.jsonid.Sort;
 import org.raden.jsonid.utils.RadenKesalahanRuntime;
-
-
+import org.raden.jsonid.utils.RefleksiLarik;
+import org.raden.jsonid.utils.Sort;
 
 /**
- * @author Rifky Aditya Bastara
- *
+ * @author kiditz
  */
 @SuppressWarnings("unchecked")
 public class Larik<E> implements Iterable<E>, Serializable {
@@ -60,9 +70,9 @@ public class Larik<E> implements Iterable<E>, Serializable {
 	/**
 	 * Membuat sebuah pesanan larik dengan kapasitas yang dapat ditentukan. Hal
 	 * ini akan menyebabkan kesalahan {@linkplain ClassCastException} saat
-	 * menggunakan {@link LarikPotret} karena alasan tipe generik T tidak dapat
-	 * dikonversi ke dalam Obyek maka yang harus dilakukan adalah dengan
-	 * menggunakan konstruktor {@link Larik#Larik(Class)}
+	 * menggunakan karena alasan tipe generik T tidak dapat dikonversi ke dalam
+	 * Obyek maka yang harus dilakukan adalah dengan menggunakan konstruktor
+	 * {@link Larik#Larik(Class)}
 	 * 
 	 * @param kapasitas
 	 *            adalah kapasistas dari {@link #materi} larik yang akan
@@ -77,8 +87,7 @@ public class Larik<E> implements Iterable<E>, Serializable {
 	}
 
 	/**
-	 * Membuat sebuah pesanan larik dengan {@link #materi} yang memiliki tipe
-	 * spesifik berlaku untuk memudahkan {@link LarikPotret}
+	 * Membuat sebuah pesanan larik dengan {@link #materi} dengan spesifik kelas
 	 * 
 	 * @param kapasitas
 	 *            adalah kapasistas dari {@link #materi} larik yang akan
@@ -86,8 +95,10 @@ public class Larik<E> implements Iterable<E>, Serializable {
 	 * @param pesanan
 	 *            jika pesanan false metode hapus elemen akan dapat mengubah
 	 *            urutan larik dan unsur-unsur lain yang terdapat didalamnya
+	 * @param tipeLarik
+	 *            kelas {@linkplain RefleksiLarik} sebagai instant untuk
+	 *            penanganan error
 	 */
-
 	public Larik(int kapasitas, boolean pesanan, Class<?> tipeLarik) {
 		this.materi = (E[]) RefleksiLarik.instantBaru(tipeLarik, kapasitas);
 		this.pesanan = pesanan;
@@ -122,15 +133,21 @@ public class Larik<E> implements Iterable<E>, Serializable {
 	 * Membuat sebuah pesanan larik dengan pesanan, mulai, dan jumlah. materi
 	 * baru akan memiliki tipe yang sama dengan materi sebelumnya agar dapat
 	 * dipesan dengan baik
-	 * 
+	 *
+	 * @param larik
+	 *            adalah nilai larik
+	 * @param mulai
+	 *            adalah offset mulai
+	 * @param jumlah
+	 *            adalah jumlah larik yang mau di salin
 	 * @param pesanan
 	 *            jika pesanan false metode hapus elemen akan dapat mengubah
 	 *            urutan larik dan unsur-unsur lain yang terdapat didalamnya
 	 */
-	public Larik(E[] larik, boolean pesanan, int start, int jumlah) {
+	public Larik(E[] larik, boolean pesanan, int mulai, int jumlah) {
 		this(jumlah, pesanan, (Class<E>) larik.getClass().getComponentType());
 		this.ukuran = jumlah;
-		System.arraycopy(larik, start, materi, 0, ukuran);
+		System.arraycopy(larik, mulai, materi, 0, ukuran);
 	}
 
 	/**
@@ -169,6 +186,17 @@ public class Larik<E> implements Iterable<E>, Serializable {
 		tambahSemua(larik, 0, larik.ukuran);
 	}
 
+	/**
+	 * Menambahkan semua obyek yang ingin dimasukan kedalam {@link #materi}
+	 * berdasarkan {@link Larik} dengan spesifikasi element yang sama
+	 * 
+	 * @param larik
+	 *            adalah larik dengan elemen yang sama
+	 * @param mulai
+	 *            adalah koordinat dimana indeks pertama dimulai
+	 * @param jumlah
+	 *            adalah jumlah element yang terdapat dalam larik
+	 */
 	public void tambahSemua(Larik<? extends E> larik, int mulai, int jumlah) {
 		int total = mulai + jumlah;
 		if (total > larik.ukuran) {
@@ -177,17 +205,36 @@ public class Larik<E> implements Iterable<E>, Serializable {
 		tambahSemua((E[]) larik.materi, mulai, jumlah);
 	}
 
+	/**
+	 * Menambahkan semua obyek yang ingin dimasukan kedalam {@link #materi}
+	 * berdasarkan {@link Larik} dengan spesifikasi element yang sama
+	 * 
+	 * @param larik
+	 *            adalah larik dengan element yang sama
+	 */
 	public void tambahSemua(E... larik) {
 		tambahSemua(larik, 0, larik.length);
 	}
 
-	public void tambahSemua(E[] nilai, int mulai, int jumlah) {
+	/**
+	 * Menambahkan semua obyek yang ingin dimasukan kedalam {@link #materi}
+	 * berdasarkan {@link Larik} dengan spesifikasi element yang sama
+	 * 
+	 * @param larik
+	 *            adalah larik dengan elemen yang sama
+	 * @param mulai
+	 *            adalah koordinat dimana indeks pertama dimulai
+	 * @param jumlah
+	 *            adalah jumlah element yang terdapat dalam larik
+	 */
+
+	public void tambahSemua(E[] larik, int mulai, int jumlah) {
 		E[] materi = this.materi;
 
 		int total = ukuran + jumlah;
 		if (total > materi.length)
 			materi = resize((int) Math.max(8, total * 1.75f));
-		System.arraycopy(nilai, mulai, materi, ukuran, jumlah);
+		System.arraycopy(larik, mulai, materi, ukuran, jumlah);
 		ukuran += jumlah;
 	}
 
@@ -199,16 +246,39 @@ public class Larik<E> implements Iterable<E>, Serializable {
 		return materiBaru;
 	}
 
+	/**
+	 * Meraih sebuah element larik berdasarkan indek dari larik
+	 * 
+	 * @param indeks
+	 *            adalah indeks dari element larik
+	 * @return materi di dalam indeks
+	 */
 	public E raih(int indeks) {
 		return materi[indeks];
 	}
 
+	/**
+	 * Mengatur nilai kedalam posisi larik berdasarkan nilai dan indeks
+	 * 
+	 * @param nilai
+	 *            adalah nilai larik
+	 * @param indeks
+	 *            adalah indeks larik
+	 */
 	public void atur(E nilai, int indeks) {
 		if (indeks >= ukuran)
 			throw new IndexOutOfBoundsException("Indeks tidak bisa lebih besar dari ukuran " + indeks + " > " + ukuran);
 		materi[indeks] = nilai;
 	}
 
+	/**
+	 * Menyisipkan nilai kedalam posisi larik berdasarkan nilai dan indeks
+	 * 
+	 * @param nilai
+	 *            adalah nilai larik
+	 * @param indeks
+	 *            adalah indeks larik
+	 */
 	public void sisipkan(E nilai, int indeks) {
 		if (indeks > ukuran)
 			throw new IndexOutOfBoundsException("Indeks tidak bisa lebih besar dari ukuran " + indeks + " > " + ukuran);
@@ -243,6 +313,19 @@ public class Larik<E> implements Iterable<E>, Serializable {
 		this.materi[kedua] = NPertama;
 	}
 
+	/**
+	 * Cek apakah element larik berisi dengan element lain nya
+	 * 
+	 * @param nilai
+	 *            adalah nilai larik
+	 * @param identitas
+	 *            saat true maka akan menggunakan persamaan hard code
+	 *            <code>==</code> untuk menentukan nilai dan <code>equals</code>
+	 *            saat false
+	 * @return <code>true</code> apa bila berisi dan <code>false</code> apabila
+	 *         tidak berisi
+	 * 
+	 */
 	public boolean berisi(E nilai, boolean identitas) {
 		int o = ukuran - 1;
 
@@ -262,6 +345,11 @@ public class Larik<E> implements Iterable<E>, Serializable {
 		return false;
 	}
 
+	/**
+	 * Meraih nilai pertama dari element larik
+	 * 
+	 * @return element pertama
+	 */
 	public E pertama() {
 		if (this.ukuran == 0) {
 			throw new IllegalArgumentException(
@@ -270,6 +358,10 @@ public class Larik<E> implements Iterable<E>, Serializable {
 		return materi[0];
 	}
 
+	/**
+	 * Membersihkan seluruh isi larik
+	 * 
+	 */
 	public void bersih() {
 		for (int i = 0; i < ukuran; i++) {
 			this.materi[i] = null;
@@ -282,6 +374,8 @@ public class Larik<E> implements Iterable<E>, Serializable {
 	 * {@link #pop()} akan menghapus materi lalu ia akan memanggil materi
 	 * terakhir jika array lebih dari nol
 	 * </p>
+	 * 
+	 * @return materi terakhir dari element larik
 	 */
 	public E pop() {
 		if (this.ukuran == 0) {
@@ -296,7 +390,9 @@ public class Larik<E> implements Iterable<E>, Serializable {
 	}
 
 	/**
-	 * lanjutkan ke materi terakhir
+	 * pergi ke materi terakhir
+	 * 
+	 * @return materi terakhir
 	 */
 	public E peek() {
 		if (this.ukuran == 0) {
@@ -306,6 +402,12 @@ public class Larik<E> implements Iterable<E>, Serializable {
 		return materi[ukuran - 1];
 	}
 
+	/**
+	 * Cek apakah larik berisi nilai atau tidak
+	 * 
+	 * @return <code>true</code> apabila ditemukan dan <code>false</code>
+	 *         apabila tidak dapat ditemukan
+	 */
 	public boolean berisi(E nilai) {
 		return berisi(nilai, true);
 	}
@@ -329,10 +431,22 @@ public class Larik<E> implements Iterable<E>, Serializable {
 		return false;
 	}
 
+	/**
+	 * Menghapus nilai dari larik
+	 * 
+	 * @param nilai
+	 *            adalah nilai larik
+	 */
 	public boolean hapus(E nilai) {
 		return hapus(nilai, true);
 	}
 
+	/**
+	 * Menghapus nilai dari larik berdasarkan indeks
+	 * 
+	 * @param indeks
+	 *            adalah posisi larik
+	 */
 	public E hapusIndeks(int indeks) {
 		if (indeks >= ukuran)
 			throw new IndexOutOfBoundsException(
@@ -460,6 +574,7 @@ public class Larik<E> implements Iterable<E>, Serializable {
 
 	/**
 	 * @param larik
+	 *            adalah nilai larik yang mau dihapus
 	 * @return true jika data dari larik berhasil dihapus
 	 */
 	public boolean hapusSemua(Larik<? extends E> larik) {
@@ -686,4 +801,5 @@ public class Larik<E> implements Iterable<E>, Serializable {
 			return iterator2;
 		}
 	}
+
 }

@@ -1,14 +1,24 @@
-/**
+/*******************************************************************************
+ * Copyright 2016 By Raden Studio.
  * 
- */
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package org.raden.jsonid;
 
 import java.io.IOException;
 import java.io.Writer;
 
 import org.raden.jsonid.utils.koleksi.LarikInt;
-
-
 
 /**
  * @author Rifky A.B
@@ -86,7 +96,7 @@ public class JsonPenulis extends Writer {
 	}
 
 	/**
-	 * @param htmlSafe
+	 * @param htmlAman
 	 *            the htmlSafe to set
 	 */
 	public void aturHtmlAman(boolean htmlAman) {
@@ -127,7 +137,7 @@ public class JsonPenulis extends Writer {
 		}
 	}
 
-	public void tulisDefName() throws IOException {
+	private void tulisDefName() throws IOException {
 		if (deferredName != null) {
 			sebelumNama();
 			kata.atur(deferredName);
@@ -191,8 +201,7 @@ public class JsonPenulis extends Writer {
 		if (nilai instanceof Double) {
 			Double val = (Double) nilai;
 			if (Double.isNaN(val) || Double.isInfinite(val)) {
-				throw new IllegalArgumentException(
-						"Numeric values must be finite, but was " + val);
+				throw new IllegalArgumentException("Numeric values must be finite, but was " + val);
 			}
 			output.append(Double.toString((val)));
 			return this;
@@ -220,11 +229,10 @@ public class JsonPenulis extends Writer {
 		return this;
 	}
 
-	private JsonPenulis tutup(int kosong, int berisi, String closeBraket)
-			throws IOException {
+	private JsonPenulis tutup(int kosong, int berisi, String closeBraket) throws IOException {
 		int context = stack.peek();
 		if (context != berisi && context != kosong) {
-			throw new IllegalStateException("Nesting problem.");
+			throw new JsonKesalahan("Masalah Nesting.");
 		}
 		if (deferredName != null) {
 			throw new IllegalStateException("Penamaan " + JsonScope.Nama + "!");
@@ -236,23 +244,22 @@ public class JsonPenulis extends Writer {
 		return this;
 	}
 
-	public void sebelumNama() throws IOException {
+	private void sebelumNama() throws IOException {
 		int con = stack.peek();
 		if (con == JsonScope.ObyekBerisi) {
 			output.write(",");
 		} else if (con != JsonScope.ObyekKosong) {
-			throw new IllegalStateException("Nesting problem.");
+			throw new JsonKesalahan("Masalah Nesting. nama tidak dipanggil didalam obyek yang sudah ada..");
 		}
 		barisBaru();
 		gantiAkhir(JsonScope.Nama);
 	}
 
-	public void sebelumNilai() throws IOException {
+	private void sebelumNilai() throws IOException {
 		switch (stack.peek()) {
 		case JsonScope.DokumenBerisi:
 			if (!lenient) {
-				throw new IllegalStateException(
-						"Json harus memiliki top-level nilai");
+				throw new IllegalStateException("Json harus memiliki top-level nilai");
 			}
 			// fall-through
 		case JsonScope.DokumenKosong:
@@ -271,7 +278,7 @@ public class JsonPenulis extends Writer {
 			gantiAkhir(JsonScope.ObyekBerisi);
 			break;
 		default:
-			throw new IllegalArgumentException("ada masalah nesting");
+			throw new JsonKesalahan("Masalah nesting");
 		}
 	}
 
@@ -298,8 +305,7 @@ public class JsonPenulis extends Writer {
 
 	public class AturKata {
 		public void atur(String nilai) throws IOException {
-			String[] arrpengganti = htmlAman ? PENGGANTI_KARAKTER_HTML
-					: PENGGANTI_KARAKTER;
+			String[] arrpengganti = htmlAman ? PENGGANTI_KARAKTER_HTML : PENGGANTI_KARAKTER;
 			output.write('"');
 			int akhir = 0;
 			int length = nilai.length();
@@ -339,6 +345,6 @@ public class JsonPenulis extends Writer {
 
 	@Override
 	public void close() throws IOException {
-		//tutup();
+		// tutup();
 	}
 }

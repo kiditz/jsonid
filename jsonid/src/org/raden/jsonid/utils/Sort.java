@@ -11,14 +11,11 @@
  * governing permissions and limitations under the License.
  */
 
-package org.raden.jsonid;
+package org.raden.jsonid.utils;
 
 import java.util.Comparator;
 
-import org.raden.jsonid.utils.ComparableTimSort;
 import org.raden.jsonid.utils.koleksi.Larik;
-
-
 
 /**
  * Provides methods to sort arrays of objects. Sorting requires working memory
@@ -70,8 +67,7 @@ public class Sort {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public <T> void sort(T[] a, Comparator<? super T> c, int fromIndex,
-			int toIndex) {
+	public <T> void sort(T[] a, Comparator<? super T> c, int fromIndex, int toIndex) {
 		if (timSort == null)
 			timSort = new TimSort();
 		timSort.doSort(a, c, fromIndex, toIndex);
@@ -80,6 +76,8 @@ public class Sort {
 	/**
 	 * Returns a Sort instance for convenience. Multiple threads must not use
 	 * this instance at the same time.
+	 * 
+	 * @return instance
 	 */
 	static public Sort instance() {
 		if (instance == null)

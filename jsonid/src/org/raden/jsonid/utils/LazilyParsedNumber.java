@@ -73,7 +73,7 @@ public final class LazilyParsedNumber extends Number {
 	}
 
 	/**
- * If somebody is unlucky enough to have to serialize one of these,
+	 * If somebody is unlucky enough to have to serialize one of these,
 	 * serialize it as a BigDecimal so that they won't need Gson on the other
 	 * side to deserialize it.
 	 */

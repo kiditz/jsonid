@@ -1,6 +1,18 @@
-/**
+/*******************************************************************************
+ * Copyright 2016 By Raden Studio.
  * 
- */
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package org.raden.jsonid;
 
 import java.math.BigDecimal;
@@ -9,33 +21,30 @@ import java.util.Iterator;
 
 import org.raden.jsonid.utils.koleksi.Larik;
 
-
-
 /**
  * @author Rifky A.B
  *
  */
 public class JsonLarik extends JsonElement implements Iterable<JsonElement> {
 	private final Larik<JsonElement> lariks;
-
 	public JsonLarik() {
 		lariks = new Larik<JsonElement>();
 	}
-
+	
 	public void tambah(JsonElement nilai) {
 		lariks.tambah(nilai);
 	}
 
-	public void tambah(JsonLarik nilai) {
-		lariks.tambahSemua(nilai);
+	public void tambah(JsonLarik larik) {
+		lariks.tambahSemua(larik);
 	}
 
-	public void atur(JsonLarik nilai) {
-		lariks.tambahSemua(nilai);
+	public void atur(JsonLarik larik) {
+		lariks.tambahSemua(larik);
 	}
 
 	public void tambah(String nilai) {
-		lariks.tambah(nilai == null ? new JsonKosong() : new JsonNilai(nilai));
+		lariks.tambah(nilai == null ? JsonKosong.baru() : new JsonNilai(nilai));
 	}
 
 	public void atur(int indeks, JsonElement nilai) {
@@ -59,15 +68,15 @@ public class JsonLarik extends JsonElement implements Iterable<JsonElement> {
 	}
 
 	public void tambah(Character nilai) {
-		lariks.tambah(nilai == null ? new JsonKosong() : new JsonNilai(nilai));
+		lariks.tambah(nilai == null ? JsonKosong.baru() : new JsonNilai(nilai));
 	}
 
 	public void tambah(Boolean nilai) {
-		lariks.tambah(nilai == null ? new JsonKosong() : new JsonNilai(nilai));
+		lariks.tambah(nilai == null ? JsonKosong.baru() : new JsonNilai(nilai));
 	}
 
 	public void tambah(Number nilai) {
-		lariks.tambah(nilai == null ? new JsonKosong() : new JsonNilai(nilai));
+		lariks.tambah(nilai == null ? JsonKosong.baru() : new JsonNilai(nilai));
 	}
 
 	@Override
@@ -102,7 +111,7 @@ public class JsonLarik extends JsonElement implements Iterable<JsonElement> {
 		if (lariks.ukuran() == 1) {
 			return lariks.raih(0).sebagaiBoolean();
 		}
-		throw new JsonKesalahan("Tidak dapat mendapatkan angka");
+		throw new JsonKesalahan("Tidak dapat mendapatkan boolean");
 	}
 
 	/*
@@ -115,7 +124,7 @@ public class JsonLarik extends JsonElement implements Iterable<JsonElement> {
 		if (lariks.ukuran() == 1) {
 			return lariks.raih(0).sebagaiBigDecimal();
 		}
-		throw new JsonKesalahan("Tidak dapat mendapatkan angka");
+		throw new JsonKesalahan("Tidak dapat mendapatkan BigDecimal");
 	}
 
 	@Override
@@ -123,7 +132,7 @@ public class JsonLarik extends JsonElement implements Iterable<JsonElement> {
 		if (lariks.ukuran() == 1) {
 			return lariks.raih(0).sebagaiBigInteger();
 		}
-		throw new JsonKesalahan("Tidak dapat mendapatkan angka");
+		throw new JsonKesalahan("Tidak dapat mendapatkan BigInteger");
 	}
 
 	@Override
@@ -131,7 +140,7 @@ public class JsonLarik extends JsonElement implements Iterable<JsonElement> {
 		if (lariks.ukuran() == 1) {
 			return lariks.raih(0).sebagaiByte();
 		}
-		throw new JsonKesalahan("Tidak dapat mendapatkan angka");
+		throw new JsonKesalahan("Tidak dapat mendapatkan Byte");
 	}
 
 	@Override
@@ -139,7 +148,7 @@ public class JsonLarik extends JsonElement implements Iterable<JsonElement> {
 		if (lariks.ukuran() == 1) {
 			return lariks.raih(0).sebagaiDouble();
 		}
-		throw new JsonKesalahan("Tidak dapat mendapatkan angka");
+		throw new JsonKesalahan("Tidak dapat mendapatkan Double");
 	}
 
 	/*
@@ -195,5 +204,9 @@ public class JsonLarik extends JsonElement implements Iterable<JsonElement> {
 			return lariks.raih(0).sebagaiShort();
 		}
 		throw new JsonKesalahan();
+	}
+	
+	public static JsonLarik baru() {
+		return new JsonLarik();
 	}
 }

@@ -1,6 +1,18 @@
-/**
+/*******************************************************************************
+ * Copyright 2016 By Raden Studio.
  * 
- */
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package org.raden.jsonid;
 
 import java.math.BigDecimal;
@@ -14,15 +26,13 @@ import org.raden.jsonid.utils.Predictable;
  *
  */
 public class JsonNilai extends JsonElement {
-	private static final Class<?>[] PRIMITIVE_TIPE = { int.class, long.class,
-			short.class, float.class, double.class, byte.class, boolean.class,
-			char.class, Integer.class, Long.class, Short.class, Float.class,
-			Double.class, Byte.class, Boolean.class, Character.class };
+	private static final Class<?>[] TipePrimitif = { int.class, long.class, short.class, float.class, double.class,
+			byte.class, boolean.class, char.class, Integer.class, Long.class, Short.class, Float.class, Double.class,
+			Byte.class, Boolean.class, Character.class };
 	public Object nilai;
 	JsonToken tipe = null;
 
 	public JsonNilai() {
-		// Jangan Melakukan apapun
 	}
 
 	public JsonNilai(Object nilai) {
@@ -50,22 +60,19 @@ public class JsonNilai extends JsonElement {
 			char c = ((Character) nilai).charValue();
 			this.nilai = String.valueOf(c);
 		} else {
-			Predictable.cekArgument(nilai instanceof Number
-					|| iniNilaiAtauString(nilai));
+			Predictable.cekArgument(nilai instanceof Number || iniNilaiAtauString(nilai));
 			this.nilai = nilai;
 		}
 	}
 
 	@Override
 	public BigDecimal sebagaiBigDecimal() {
-		return nilai instanceof BigDecimal ? (BigDecimal) nilai
-				: new BigDecimal(nilai.toString());
+		return nilai instanceof BigDecimal ? (BigDecimal) nilai : new BigDecimal(nilai.toString());
 	}
 
 	@Override
 	public BigInteger sebagaiBigInteger() {
-		return nilai instanceof BigInteger ? (BigInteger) nilai
-				: new BigInteger(nilai.toString());
+		return nilai instanceof BigInteger ? (BigInteger) nilai : new BigInteger(nilai.toString());
 	}
 
 	public boolean iniString() {
@@ -82,14 +89,12 @@ public class JsonNilai extends JsonElement {
 
 	@Override
 	public Number sebagaiAngka() {
-		return !(nilai instanceof String) ? (Number) nilai
-				: new LazilyParsedNumber((String) nilai);
+		return !(nilai instanceof String) ? (Number) nilai : new LazilyParsedNumber((String) nilai);
 	}
 
 	@Override
 	public boolean sebagaiBoolean() {
-		return nilai instanceof Boolean ? (Boolean) nilai : Boolean
-				.parseBoolean(sebagaiString());
+		return nilai instanceof Boolean ? (Boolean) nilai : Boolean.parseBoolean(sebagaiString());
 	}
 
 	@Override
@@ -103,38 +108,32 @@ public class JsonNilai extends JsonElement {
 
 	@Override
 	public double sebagaiDouble() {
-		return iniAngka() ? sebagaiAngka().doubleValue() : Double
-				.parseDouble(sebagaiString());
+		return iniAngka() ? sebagaiAngka().doubleValue() : Double.parseDouble(sebagaiString());
 	}
 
 	@Override
 	public float sebagaiFloat() {
-		return iniAngka() ? sebagaiAngka().floatValue() : Float
-				.parseFloat(sebagaiString());
+		return iniAngka() ? sebagaiAngka().floatValue() : Float.parseFloat(sebagaiString());
 	}
 
 	@Override
 	public short sebagaiShort() {
-		return iniAngka() ? sebagaiAngka().shortValue() : Short
-				.parseShort(sebagaiString());
+		return iniAngka() ? sebagaiAngka().shortValue() : Short.parseShort(sebagaiString());
 	}
 
 	@Override
 	public int sebagaiInt() {
-		return iniAngka() ? sebagaiAngka().shortValue() : Integer
-				.parseInt(sebagaiString());
+		return iniAngka() ? sebagaiAngka().shortValue() : Integer.parseInt(sebagaiString());
 	}
 
 	@Override
 	public byte sebagaiByte() {
-		return iniAngka() ? sebagaiAngka().byteValue() : Byte
-				.parseByte(sebagaiString());
+		return iniAngka() ? sebagaiAngka().byteValue() : Byte.parseByte(sebagaiString());
 	}
 
 	@Override
 	public long sebagaiLong() {
-		return iniAngka() ? sebagaiAngka().longValue() : Long
-				.parseLong(sebagaiString());
+		return iniAngka() ? sebagaiAngka().longValue() : Long.parseLong(sebagaiString());
 	}
 
 	@Override
@@ -152,7 +151,7 @@ public class JsonNilai extends JsonElement {
 			return true;
 		}
 		Class<?> classOfPrimitive = target.getClass();
-		for (Class<?> standardPrimitive : PRIMITIVE_TIPE) {
+		for (Class<?> standardPrimitive : TipePrimitif) {
 			if (standardPrimitive.isAssignableFrom(classOfPrimitive)) {
 				return true;
 			}
@@ -161,7 +160,7 @@ public class JsonNilai extends JsonElement {
 	}
 
 	public static boolean iniNilaiAtauString(Class<?> target) {
-		for (Class<?> standardPrimitive : PRIMITIVE_TIPE) {
+		for (Class<?> standardPrimitive : TipePrimitif) {
 			if (standardPrimitive.isAssignableFrom(target)) {
 				return true;
 			}
@@ -177,5 +176,10 @@ public class JsonNilai extends JsonElement {
 	@Override
 	protected JsonElement salin() {
 		return this;
+	}
+
+	
+	public static JsonNilai baru() {
+		return new JsonNilai();
 	}
 }

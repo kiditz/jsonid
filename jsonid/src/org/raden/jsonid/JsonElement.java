@@ -22,8 +22,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- * sebuah kelas abstrak representasi dari element json yang di gunakan oleh
- * {@link JsonKosong}, {@link JsonLarik}, {@link JsonNilai}, and
+ * Sebuah kelas abstrak representasi dari element json yang di gunakan oleh
+ * {@link JsonKosong}, {@link JsonLarik}, {@link JsonNilai}, dan
  * {@link JsonObyek}
  * 
  * @author Rifky A.B

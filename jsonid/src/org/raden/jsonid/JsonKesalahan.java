@@ -28,7 +28,6 @@ public class JsonKesalahan extends RuntimeException {
 
 	public JsonKesalahan() {
 		super();
-
 	}
 
 	public JsonKesalahan(String message, Throwable cause) {

@@ -76,6 +76,7 @@ import org.raden.jsonid.utils.koleksi.PetaOrder;
  * ObyekSaya obyek = new ObyekSaya();
  * String json = jsonID.keJson(obyek);
  * System.out.println(json);
+ * Blablabla
  * </pre>
  * <p>
  * Sedangkan untuk membaca dan deserialize json anda dapat menggunakan

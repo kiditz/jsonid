@@ -76,7 +76,7 @@ import org.raden.jsonid.utils.koleksi.PetaOrder;
  * ObyekSaya obyek = new ObyekSaya();
  * String json = jsonID.keJson(obyek);
  * System.out.println(json);
- * Blablabla
+
  * </pre>
  * <p>
  * Sedangkan untuk membaca dan deserialize json anda dapat menggunakan
@@ -107,7 +107,7 @@ public class JsonID {
 	private String spasi = "  ";
 	private boolean pencetakCantik = false;
 	// so, set to true for advance programmer only. :D happy coding
-	private boolean debug = true;
+	private boolean debug =false;
 	private boolean lenient = false;
 	private boolean prototipe = false;
 

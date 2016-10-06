@@ -145,8 +145,36 @@ System.out.println(jsonID.keJson(user));
 * Obyek Deserialize 
 Hal ini dapat ditangani secara mudah dengan json id jika obyek tersebut hanya berupa satu obyek maka dapat ditangani dengan 
 ```java
-User user = jsonID.dariJson(out, User.class);
-System.out.println(user);
+User user = new User();
+user.setUsername("kiditz");
+user.setPassword("ganteng");
+user.setSkills(new Larik(new Skill("Java", "Android"),new Skill("Java", "J2EE"), new Skill("Java", "J2SE")));
+JsonID jsonID = JsonID.baru().aktifkanSpasi().aturTipeElement(User.class, "skills", Skill.class);
+String out = jsonID.keJson(user);
+System.out.println(out);
+User user2 = jsonID.dariJson(out, User.class);
+System.out.println(user2);
+
+{
+  "username": "kiditz",
+  "password": "ganteng",
+  "skills": [
+    {
+      "programming": "Java",
+      "operatingSystem": "Android"
+    },
+    {
+      "programming": "Java",
+      "operatingSystem": "J2EE"
+    },
+    {
+      "programming": "Java",
+      "operatingSystem": "J2SE"
+    }
+  ]
+}
+//Hasil deserialize
+User [username=kiditz, password=ganteng, skills=[Skill [programming=Java, operatingSystem=Android], Skill [programming=Java, operatingSystem=J2EE], Skill [programming=Java, operatingSystem=J2SE]]]
 ```
 # Menulis dengan Json Obyek
 ```java

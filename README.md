@@ -71,6 +71,37 @@ static class User{
 }
 
 ```
+__Kemudian Bhang!! jsonid akan menambahkan tag yang berupa nama kelas yang di gunakan untuk membentuk larik saat ia tidak di inisialisasi dengan kelas yang seharusnya. selain menggunakan kelas larik anda juga dapat menggunakan [ArrayList](http://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html), __
+```java
+User user = new User();
+user.setUsername("kiditz");
+user.setPassword("ganteng");
+user.setSkills(new Larik(new Skill("Java", "Android"),new Skill("Java", "J2EE"), new Skill("Java", "J2SE")));
+JsonID jsonID = JsonID.baru().aktifkanSpasi();
+System.out.println(jsonID.keJson(user));
+{
+  "username": "kiditz",
+  "password": "ganteng",
+  "skills": [
+    {
+      "kelas": "org.raden.json.test.JsonIdTest$Skill",
+      "programming": "Java",
+      "operatingSystem": "Android"
+    },
+    {
+      "kelas": "org.raden.json.test.JsonIdTest$Skill",
+      "programming": "Java",
+      "operatingSystem": "J2EE"
+    },
+    {
+      "kelas": "org.raden.json.test.JsonIdTest$Skill",
+      "programming": "Java",
+      "operatingSystem": "J2SE"
+    }
+  ]
+}
+```
+
 
 # Menulis dengan Json Obyek
 ```java

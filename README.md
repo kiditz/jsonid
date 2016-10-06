@@ -1,6 +1,7 @@
 # JsonID Library
 
-[1. Overview](#overview) 
+* [<b>Overview</b>](#overview) 
+* [<b>Tipe data primitif</b>](#tipe-data-primitif) 
 
 ##<h1>Overview </h1>
 Framework java untuk serialize dan deserilize json.
@@ -16,7 +17,7 @@ untuk menggunakan jsonid anda dapat menemukannya di maven central repository(htt
 * JsonParser
 
 
-#2 Tipe data primitif
+##<h1>Tipe data primitif</h1>
 ```java
 JsonID jsonID = JsonID.baru().aktifkanSpasi();
 StringBuilder builder = new StringBuilder();

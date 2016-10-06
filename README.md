@@ -53,13 +53,13 @@ JsonID jsonID = JsonID.baru();
 System.out.println(jsonID.keJson(user));
 {"username":"kiditz","password":"ganteng"}
 ```
-__*Hal tersebut dapat digunakan tapi sangat sulit untuk dibaca, untuk dapat memudahkan pembacaan maka anda perlu mengaktifkan spasi yang dapat anda aktifkan dengan*__
+__Hal tersebut dapat digunakan tapi sangat sulit untuk dibaca, untuk dapat memudahkan pembacaan maka anda perlu mengaktifkan spasi yang dapat anda aktifkan dengan__
 ```java
 JsonID jsonID = JsonID.baru().aktifkanSpasi();
 System.out.println(jsonID.keJson(user));
 
 ```
-__*Serialize Larik, Map, Set, Collection, yang merupakan kasus spesial*__
+__*Serialize Larik*__
 
 
 # Menulis dengan Json Obyek

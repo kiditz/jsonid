@@ -34,7 +34,9 @@ jsonID.keJson(new float[]{1.1f, 2.1f, 3.1f, 4.3f, 5.2f});//float array
 jsonID.keJson(new boolean[]{true, false, false, true})//
 ```
 # Serialize Obyek Otomatis
+
 __Note:__ *JsonID menggunakan reflection untuk dapat melakukan serialize obyek secara otomatis*
+
 ```java
 class User{
   private String username;

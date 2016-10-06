@@ -3,6 +3,7 @@
 * [Overview](#overview) 
 * [Semua Kelas](#semua-kelas) 
 * [Tipe data primitif](#tipe-data-primitif) 
+* [Serialize dan Deserialize Obyek Otomatis](#serialize-dan-deserialize-obyek-otomatis)
 
 # Overview
 Framework java untuk serialize dan deserilize Plain Old Java Object (POJO) kedalam format json maupun sebaliknya.
@@ -19,8 +20,6 @@ untuk dapat menggunakan jsonid anda dapat menemukannya di [Maven central reposit
 * JsonParser
 * JsonPembaca
 * JsonPenulis
-* JsonParser
-* JsonParser
 
 
 # Tipe data primitif
@@ -40,6 +39,7 @@ __Note:__ *JsonID menggunakan reflection untuk dapat melakukan serialize obyek s
 class User{
   private String username;
   private String password;
+  //Getter And Setter
 }
 ```
 __*Menggunakan kelas User*__
@@ -61,6 +61,16 @@ System.out.println(jsonID.keJson(user));
 ```
 __*Serialize Larik*__
 
+__Pertama tama ubah kelas user menjadi seperti ini__
+```java
+static class User{
+  private String username;
+  private String password;
+  private Larik skills = new Larik();
+  //Getter And Setter
+}
+
+```
 
 # Menulis dengan Json Obyek
 ```java

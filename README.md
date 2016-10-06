@@ -3,7 +3,7 @@
 * [Overview](#overview) 
 * [Semua Kelas](#semua-kelas) 
 * [Tipe data primitif](#tipe-data-primitif) 
-* [Serialize dan Deserialize Obyek Otomatis](#serialize-dan-deserialize-obyek-otomatis)
+* [Serialize Obyek Otomatis](#serialize-obyek-otomatis)
 
 # Overview
 Framework java untuk serialize dan deserilize Plain Old Java Object (POJO) kedalam format json maupun sebaliknya.
@@ -33,7 +33,7 @@ jsonID.keJson(new int[]{1, 2, 3, 4, 5});//integer array
 jsonID.keJson(new float[]{1.1f, 2.1f, 3.1f, 4.3f, 5.2f});//float array
 jsonID.keJson(new boolean[]{true, false, false, true})//
 ```
-# Serialize dan Deserialize Obyek Otomatis
+# Serialize Obyek Otomatis
 __Note:__ *JsonID menggunakan reflection untuk dapat melakukan serialize obyek secara otomatis*
 ```java
 class User{
@@ -140,7 +140,14 @@ System.out.println(jsonID.keJson(user));
   ]
 }
 ```
+# Deserialize Obyek Otomatis
 
+* Obyek Deserialize 
+Hal ini dapat ditangani secara mudah dengan json id jika obyek tersebut hanya berupa satu obyek maka dapat ditangani dengan 
+```java
+User user = jsonID.dariJson(out, User.class);
+System.out.println(user);
+```
 # Menulis dengan Json Obyek
 ```java
 JsonObyek obyek = JsonObyek.baru();

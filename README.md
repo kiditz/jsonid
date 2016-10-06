@@ -1,7 +1,8 @@
 # JsonID Library
 
-* [<b>Overview</b>](#overview) 
-* [<b>Tipe data primitif</b>](#tipe-data-primitif) 
+* [Overview](#overview) 
+* [Semua Kelas](#semua-kelas) 
+* [Tipe data primitif](#tipe-data-primitif) 
 
 # Overview
 Framework java untuk serialize dan deserilize Plain Old Java Object (POJO) kedalam format json maupun sebaliknya.
@@ -57,7 +58,6 @@ __Hal tersebut dapat digunakan tapi sangat sulit untuk dibaca, untuk dapat memud
 ```java
 JsonID jsonID = JsonID.baru().aktifkanSpasi();
 System.out.println(jsonID.keJson(user));
-
 ```
 __*Serialize Larik*__
 

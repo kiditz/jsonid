@@ -52,12 +52,19 @@ __*Serialize User ke json*__
 ```java
 JsonID jsonID = JsonID.baru();
 System.out.println(jsonID.keJson(user));
+//Hasil
 {"username":"kiditz","password":"ganteng"}
 ```
 __Hal tersebut dapat digunakan tapi sangat sulit untuk dibaca, untuk dapat memudahkan pembacaan maka anda perlu mengaktifkan spasi yang dapat anda aktifkan dengan__
 ```java
 JsonID jsonID = JsonID.baru().aktifkanSpasi();
 System.out.println(jsonID.keJson(user));
+//Hasil
+{
+  "username": "kiditz",
+  "password": "ganteng",
+}
+
 ```
 __*Serialize Larik*__
 
@@ -67,11 +74,11 @@ static class User{
   private String username;
   private String password;
   private Larik skills = new Larik();
-  //Getter And Setter
+  //Getter dan Setter
 }
 
 ```
-__Kemudian Bhang!! jsonid akan menambahkan tag yang berupa nama kelas yang di gunakan untuk membentuk larik saat ia tidak di inisialisasi dengan kelas yang seharusnya. selain menggunakan kelas larik anda juga dapat menggunakan [ArrayList](http://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html), __
+**Bhang!! jsonid akan menambahkan tag yang berupa nama kelas yang di gunakan untuk membentuk larik saat ia tidak di inisialisasi dengan kelas yang seharusnya. selain menggunakan kelas larik anda juga dapat menggunakan [ArrayList](http://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html), [Set](https://docs.oracle.com/javase/7/docs/api/java/util/Set.html), dan kelas-kelas lain yang memiliki sifat [Collection](https://docs.oracle.com/javase/7/docs/api/java/util/Collection.html)**
 ```java
 User user = new User();
 user.setUsername("kiditz");
@@ -79,6 +86,7 @@ user.setPassword("ganteng");
 user.setSkills(new Larik(new Skill("Java", "Android"),new Skill("Java", "J2EE"), new Skill("Java", "J2SE")));
 JsonID jsonID = JsonID.baru().aktifkanSpasi();
 System.out.println(jsonID.keJson(user));
+//Hasil
 {
   "username": "kiditz",
   "password": "ganteng",
@@ -101,7 +109,31 @@ System.out.println(jsonID.keJson(user));
   ]
 }
 ```
+**Untuk dapat memperbaiki hal ini maka kita perlu mengatur tipe element yang dapat membuat ulang obyek larik agar memiliki argument seperti Larik[[<Skill>]] dimana field yang ditulis di dalam kelas user harus sama dengan parameter nama field yang di tentukan saat menggunakan method aturTipeElement()**
 
+```java
+JsonID jsonID = JsonID.baru().aktifkanSpasi().aturTipeElement(User.class, "skills", Skill.class);
+System.out.println(jsonID.keJson(user));
+//Hasil
+{
+  "username": "kiditz",
+  "password": "ganteng",
+  "skills": [
+    {
+      "programming": "Java",
+      "operatingSystem": "Android"
+    },
+    {
+      "programming": "Java",
+      "operatingSystem": "J2EE"
+    },
+    {
+      "programming": "Java",
+      "operatingSystem": "J2SE"
+    }
+  ]
+}
+```
 
 # Menulis dengan Json Obyek
 ```java

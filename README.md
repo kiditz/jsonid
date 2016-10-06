@@ -109,7 +109,7 @@ System.out.println(jsonID.keJson(user));
   ]
 }
 ```
-**Untuk dapat memperbaiki hal ini maka kita perlu mengatur tipe element yang dapat membuat ulang obyek larik agar memiliki argument seperti Larik[[<Skill>]] dimana field yang ditulis di dalam kelas user harus sama dengan parameter nama field yang di tentukan saat menggunakan method aturTipeElement()**
+**Untuk dapat memperbaiki hal ini maka kita perlu mengatur tipe element yang dapat membuat ulang obyek larik agar memiliki argument seperti Larik```<Skill>``` dimana field yang ditulis di dalam kelas user harus sama dengan parameter nama field yang di tentukan saat menggunakan method aturTipeElement()**
 
 ```java
 JsonID jsonID = JsonID.baru().aktifkanSpasi().aturTipeElement(User.class, "skills", Skill.class);

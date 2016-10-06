@@ -5,7 +5,9 @@
 * [Tipe data primitif](#tipe-data-primitif) 
 * [Serialize Obyek Otomatis](#serialize-obyek-otomatis)
 * [Deserialize Obyek Otomatis](#deserialize-obyek-otomatis)
-
+* [Serialize Obyek Manual](#serialize-obyek-manual)
+* [Deserialize Obyek Manual](#deserialize-obyek-manual)
+* [Serialize dengan Dom Element](#serialize-dengan-dom-element)
 # Overview
 Framework java untuk serialize dan deserilize Plain Old Java Object (POJO) kedalam format json maupun sebaliknya.
 untuk dapat menggunakan jsonid anda dapat menemukannya di [Maven central repository](https://mvnrepository.com/artifact/com.github.kiditz/jsonid/1.0.0).
@@ -147,7 +149,7 @@ System.out.println(jsonID.keJson(user));
 # Deserialize Obyek Otomatis
 
 * Obyek Deserialize 
-Hal ini dapat ditangani secara mudah dengan json id jika obyek tersebut hanya berupa satu obyek maka dapat ditangani dengan 
+
 ```java
 User user = new User();
 user.setUsername("kiditz");
@@ -195,13 +197,99 @@ String out = jsonID.keJson(user, Object.class);
 System.out.println(out);
 Object object = jsonID.dariJson(out, Object.class);
 System.out.println(object);
-
 ```
-# Menulis dengan Json Obyek
+# Serialize Obyek Manual
+Untuk menulis json dengan menggunakan metode dom seperti file xml maka dapat menggunakan ```JsonPenulis``` untuk dapat membuat map, nilai, larik dan lain-lain.
+```java
+StringWriter writer = new StringWriter();
+JsonPenulis penulis = new JsonPenulis(writer);
+penulis.mulaiObyek();
+penulis.nama("username").nilai("kiditz");
+penulis.nama("binatang");
+penulis.mulaiLarik();
+penulis.nilai("gajah").nilai("buaya").nilai("baygon").nilai("sianida");
+penulis.akhirLarik();
+penulis.akhirObyek();
+System.out.println(writer.toString());
+String json = writer.toString();
+//Hasil 
+{"username":"kiditz","binatang":["gajah","buaya","baygon","sianida"]}
+```
+# Deserialize Obyek Manual
+```java
+JsonPembaca pembaca = new JsonPembaca(new StringReader(json));
+JsonParser parser = new JsonParser();
+JsonElement element = parser.parse(pembaca);
+if(element.iniObyek()){
+	JsonObyek obyek = element.sebagaiObyek();
+	System.out.println(obyek.raih("username"));
+  JsonLarik larik = obyek.raih("binatang").sebagaiLarik();
+  int i = 1;
+  for (JsonElement element2 : larik) {
+     System.out.print(element2.sebagaiString());
+     if (i++ != larik.ukuran()) {
+       System.out.print(", ");
+     }
+	}
+}
+// Hasil
+
+"kiditz"
+gajah
+buaya
+baygon
+sianida
+```
+# Serialize dengan Dom Element
+
+* JsonObyek
 ```java
 JsonObyek obyek = JsonObyek.baru();
-obyek.tambah("username", new JsonNilai("kiditzs"));
-obyek.tambah("phone", new JsonNilai("0877-8874-4374"));
-obyek.tambah("skills", new JsonNilai("Java Programmers"));
+obyek.tambah(String.class.getName(), new JsonNilai(String.format("%s", "this is from string")));
+obyek.tambah(Integer.class.getName(), new JsonNilai(Integer.MAX_VALUE));
+obyek.tambah(Short.class.getName(), new JsonNilai(Short.MAX_VALUE));
+obyek.tambah(Boolean.class.getName(), new JsonNilai(false));
+obyek.tambah(Double.class.getName(), new JsonNilai(Double.MAX_EXPONENT));
+obyek.tambah(Long.class.getName(), new JsonNilai(Long.MAX_VALUE));
+obyek.tambah(Float.class.getName(), new JsonNilai(Float.MAX_VALUE));
+obyek.tambah(Byte.class.getName(), new JsonNilai(Byte.toString("this is byte roger".getBytes()[0])));
 System.out.println(obyek.toString());
+//Hasil
+{
+  "java.lang.String": "this is from string",
+  "java.lang.Integer": 2147483647,
+  "java.lang.Short": 32767,
+  "java.lang.Boolean": "false",
+  "java.lang.Double": 1023,
+  "java.lang.Long": 9223372036854775807,
+  "java.lang.Float": 3.4028235E38,
+  "java.lang.Byte": "116"
+}
 ```
+
+* JsonLarik
+```java
+JsonLarik larik = JsonLarik.baru();
+larik.tambah(true);
+larik.tambah("hei");
+larik.tambah(Float.MAX_VALUE);
+larik.tambah(Integer.MAX_VALUE);
+larik.tambah(Long.MAX_VALUE);
+larik.tambah(Short.MAX_VALUE);
+larik.tambah(Byte.MAX_VALUE);
+larik.tambah(Double.MAX_VALUE);
+
+//Hasil
+[
+  "true",
+  "hei",
+  3.4028235E38,
+  2147483647,
+  9223372036854775807,
+  32767,
+  127,
+  1.7976931348623157E308
+]
+```
+*__Note__ * Untuk dapat membaca dengan menggunakan dom maka anda dapat melihat kembali penjelasan mengenai ```JsonParser dan JsonPembaca``` yang sudah di jelaskan sebelumnya.
+

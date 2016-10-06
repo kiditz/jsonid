@@ -4,6 +4,7 @@
 * [Semua Kelas](#semua-kelas) 
 * [Tipe data primitif](#tipe-data-primitif) 
 * [Serialize Obyek Otomatis](#serialize-obyek-otomatis)
+* [Deserialize Obyek Otomatis](#deserialize-obyek-otomatis)
 
 # Overview
 Framework java untuk serialize dan deserilize Plain Old Java Object (POJO) kedalam format json maupun sebaliknya.
@@ -86,7 +87,8 @@ static class User{
 
 * Lalu...
 
-Bhang!! jsonid akan menambahkan tag yang berupa nama kelas yang di gunakan untuk membentuk larik saat ia tidak di inisialisasi dengan kelas yang seharusnya. selain menggunakan kelas larik anda juga dapat menggunakan [ArrayList](http://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html), [Set](https://docs.oracle.com/javase/7/docs/api/java/util/Set.html), dan kelas-kelas lain yang memiliki sifat [Collection](https://docs.oracle.com/javase/7/docs/api/java/util/Collection.html)
+Bhang!! jsonid akan menambahkan tag yang berupa nama kelas yang di gunakan untuk membentuk larik saat ia tidak di inisialisasi dengan kelas yang seharusnya. selain menggunakan kelas larik anda juga dapat menggunakan [ArrayList](http://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html), [Set](https://docs.oracle.com/javase/7/docs/api/java/util/Set.html), dan kelas-kelas lain yang memiliki sifat [Collection](https://docs.oracle.com/javase/7/docs/api/java/util/Collection.html). juga dapat melakukan serialize terhadap kelas-kelas yang memiliki sifat [Map](https://docs.oracle.com/javase/7/docs/api/java/util/Map.html) atau dapat juga menggunakan kelas kustom ```PetaObyek``` yang sudah di sediakan oleh JsonID sejak versi 1.0.0
+
 ```java
 User user = new User();
 user.setUsername("kiditz");
@@ -178,6 +180,23 @@ System.out.println(user2);
 //Hasil deserialize
 User [username=kiditz, password=ganteng, skills=[Skill [programming=Java, operatingSystem=Android], Skill [programming=Java, operatingSystem=J2EE], Skill [programming=Java, operatingSystem=J2SE]]]
 ```
+__Note :__ *Obyek* ```dariJson``` *merupakan root untuk dapat melakukan pembacaan json yang akan  membaca semua bidang ataupun semua benda yang ditemui dalam file berformat json secara recrusive. tipe diketahui dan tipe element juga dapat digunakan oleh method ```toJson``` . hal ini hanya akan berguna jika jenis json benar-benar diketahui, jika takut kelas tersebut ambigu dengan nilai json, kita dapat menginisialisasikannya dengan tipe Object . 
+*
+Sebagai contoh :
+```java
+User user = new User();
+user.setUsername("kiditz");
+user.setPassword("ganteng");
+user.setSkills(new Larik(new Skill("Java", "Android"),new Skill("Java", "J2EE"), new Skill("Java", "J2SE")));
+
+//May be user come from internet and it is unknown json format because you only read that from Http Method
+JsonID jsonID = JsonID.baru().aktifkanSpasi().aturTipeElement(User.class, "skills", Skill.class);
+String out = jsonID.keJson(user, Object.class);
+System.out.println(out);
+Object object = jsonID.dariJson(out, Object.class);
+System.out.println(object);
+
+```
 # Menulis dengan Json Obyek
 ```java
 JsonObyek obyek = JsonObyek.baru();
@@ -186,4 +205,3 @@ obyek.tambah("phone", new JsonNilai("0877-8874-4374"));
 obyek.tambah("skills", new JsonNilai("Java Programmers"));
 System.out.println(obyek.toString());
 ```
-

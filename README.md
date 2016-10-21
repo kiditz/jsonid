@@ -184,7 +184,7 @@ System.out.println(user2);
 //Hasil deserialize
 User [username=kiditz, password=ganteng, skills=[Skill [programming=Java, operatingSystem=Android], Skill [programming=Java, operatingSystem=J2EE], Skill [programming=Java, operatingSystem=J2SE]]]
 ```
-__Note :__ *Obyek* ```dariJson``` *merupakan root untuk dapat melakukan pembacaan json yang akan  membaca semua bidang ataupun semua benda yang ditemui dalam file berformat json secara recrusive. tipe diketahui dan tipe element juga dapat digunakan oleh method ```toJson``` . hal ini hanya akan berguna jika jenis json benar-benar diketahui, jika takut kelas tersebut ambigu dengan nilai json, kita dapat menginisialisasikannya dengan tipe Object . 
+e__Note :__ *Obyek* ```dariJson``` *merupakan root untuk dapat melakukan pembacaan json yang akan  membaca semua bidang ataupun semua benda yang ditemui dalam file berformat json secara recrusive. tipe diketahui dan tipe element juga dapat digunakan oleh method ```kJson``` . hal ini hanya akan berguna jika jenis json benar-benar diketahui, jika takut kelas tersebut ambigu dengan nilai json, kita dapat menginisialisasikannya dengan tipe Object . 
 *
 Sebagai contoh :
 ```java
